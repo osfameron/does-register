@@ -1,0 +1,10 @@
+#!/bin/bash
+BASE=`dirname $0`
+pushd $BASE > /dev/null
+LOCAL=local
+mkdir -p $LOCAL
+
+perl -Mlocal::lib=$LOCAL
+echo export PS1='"(does) $PS1"'
+
+popd > /dev/null

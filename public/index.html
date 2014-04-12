@@ -1,0 +1,137 @@
+<head>
+    <script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function () {
+            var socket = io.connect( );
+
+            socket.on('connect', function () {
+                console.log('CONNECTED');
+            });
+         
+            socket.on('members', function (list) {
+                console.log("MEMBERS", list); // we see this
+            });
+
+            socket.emit('hello'); // Tell server we are ready for first members list
+        });
+    </script>
+    <style>
+        td img {
+            width: 48px;
+            height: 48px;
+        }
+
+        table thead th:first-child {
+            -moz-border-radius-topleft:10px;
+            -webkit-border-top-left-radius:10px;
+            border-top-left-radius:10px
+        }
+
+        table thead th:last-child {
+            -moz-border-radius-topright:10px;
+            -webkit-border-top-right-radius:10px;
+            border-top-right-radius:10px
+        }
+
+        table tr:last-child td:first-child {
+            -moz-border-radius-bottomleft:10px;
+            -webkit-border-bottom-left-radius:10px;
+            border-bottom-left-radius:10px
+        }
+
+        table tr:last-child td:last-child {
+            -moz-border-radius-bottomright:10px;
+            -webkit-border-bottom-right-radius:10px;
+            border-bottom-right-radius:10px
+        }
+
+        table {
+            /* border-collapse: collapse; */
+            border-spacing: 0;
+        }
+        th {
+            background: #ccaa00;
+            padding: 0.25em;
+        }
+        tr.inactive td {
+            opacity: 0.4;
+            filter: alpha(opacity=40);
+        }
+        td,th {
+            border: solid 1px #ccaa00;
+        }
+        td {
+            background: #ffffcc;
+            padding: 0.25em;
+        }
+        td.unpadded {
+            padding: 0;
+        }
+        td.overdue {
+            background: #ffaaaa;
+        }
+        td.num {
+            text-align: right;
+        }
+        select, button {
+            border-radius: 0.25em;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th> &nbsp; </th> <!-- gravatar -->
+                <th> User </th> <!-- clickable -->
+                <th> &nbsp; </th> <!-- Org,Perm,Tech,Ws,Fr,Fwb,Hd -->
+                <th> PAYG<br>left </th> <!-- number, and + to add more -->
+                <th> / used </th> <!-- select -->
+                <th> Time <br>in </th> <!-- hh:mm -->
+                <th> / out </th> <!-- hh:mm or button -->
+                <th> &nbsp; </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="active">
+                <td> <img src="https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon"> </td>
+                <td> Hakim Cassimally </td>
+                <td> Org,Perm </td>
+                <td class="num"> 0 </td>
+                <td> 
+                    <select><option selected>0</option> <option>0.25</option> <option>0.5</option> <option>1</option></select>
+                </td>
+                <td> 09:00 </td>
+                <td> <button>Left</button> </td>
+                <td> &nbsp; </td>
+            </tr>
+            <tr class="active">
+                <td> <img src="https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon"> </td>
+                <td> Henry Hotdesker</td>
+                <td> Pg </td>
+                <td class="num overdue"> -1 </td>
+                <td> 
+                    <select><option>0</option> <option>0.25</option> <option>0.5</option> <option selected>1</option></select>
+                </td>
+                <td> 09:30 </td>
+                <td> <button>Left</button> </td>
+                <td> &nbsp; </td>
+            </tr>
+            <tr class="inactive">
+                <td> <img src="https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon"> </td>
+                <td> Helen Hotdesker</td>
+                <td> Pg </td>
+                <td class="num"> 10 </td>
+                <td> 
+                    <select><option>0</option> <option>0.25</option> <option selected>0.5</option> <option>1</option></select>
+                </td>
+                <td> 09:30 </td>
+                <td> 12:01 </td>
+                <td> &nbsp; </td>
+            </tr>
+        </tbody>
+    </table>
+</body>  
