@@ -1,13 +1,13 @@
 package DoES::Register;
 
 use Moo;
-# use DoES::Register::Schema;
+use DoES::Register::Schema;
 use DoES::Register::Handler;
 
 has dsn => (
     is => 'lazy',
     # isa => 'Str',
-    value => 'dbi:Pg:dbname=doesregister',
+    default => 'dbi:Pg:dbname=doesregister',
 );
 
 has connect_info => (
@@ -19,7 +19,7 @@ has connect_info => (
 has db => (
     is => 'lazy',
     default => sub {
-        DoES::Register::Schema->new(@{ shift->connect_info });
+        DoES::Register::Schema->connect(@{ shift->connect_info });
     }
 );
 
