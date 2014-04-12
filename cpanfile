@@ -3,3 +3,17 @@ requires 'Plack';
 requires 'Plack::Middleware::Static';
 requires 'PocketIO::Client::IO';
 requires 'Path::Tiny';
+
+requires 'DBD::Pg';
+requires 'DBIx::Class';
+requires 'DBIx::Class::Migration';
+requires 'DBIx::Class::Candy';
+requires 'Test::PostgreSQL';
+requires 'DBIx::Class::InflateColumn::DateTime';
+
+requires 'Test::Most';
+requires 'Test::Pretty';
+requires 'App::ForkProve';
+requires 'Test::DBIx::Class';
+
+requires 'Moo';

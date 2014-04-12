@@ -9,40 +9,30 @@ use Plack::Response;
 
 use Path::Tiny 'path';
 
-use FindBin;
+use lib 'lib';
+use DoES::Register;
 
+use FindBin;
 my $root = path( $FindBin::Bin );
 
-builder {
-    mount '/socket.io/socket.io.js' => 
+sub mount_file {
+    mount $_[0] => 
         Plack::App::File->new( 
-            file => $root->child('/public/socket.io.js')
+            file => $root->child($_[1]) 
         )->to_app;
+};
 
-    mount '/socket.io/static/flashsocket/WebSocketMain.swf' =>
-          Plack::App::File->new(file => $root->child('/public/WebSocketMain.swf')
-          )->to_app;
+my $app = DoES::Register->new;
 
-    mount '/socket.io/static/flashsocket/WebSocketMainInsecure.swf' =>
-          Plack::App::File->new(file => $root->child('/public/WebSocketMainInsecure.swf')
-          )->to_app;
+builder {
+    mount_file '/socket.io/socket.io.js' 
+        => '/public/socket.io.js';
+    mount_file '/socket.io/static/flashsocket/WebSocketMain.swf' 
+        => '/public/WebSocketMain.swf';
+    mount_file '/socket.io/static/flashsocket/WebSocketMainInsecure.swf' 
+        => '/public/WebSocketMainInsecure.swf';
 
-    mount '/socket.io' => PocketIO->new(
-        handler => sub {
-            my $self = shift;
-
-            $self->on( message => sub {
-                warn join ',' => @_;
-            });
-
-            $self->on( hello => sub {
-                    my ($self, $fun) = @_;
-
-                    $self->emit( members => ['TODO'] );
-                }
-            );
-        }
-    );
+    mount '/socket.io' => $app->pocket_io;
 
     mount '/' => builder {
         enable "Static",
@@ -51,11 +41,7 @@ builder {
 
         enable "SimpleLogger", level => 'debug';
 
-        sub {
-            my $res = Plack::Response->new(200);
-            $res->body( $root->child('/public/index.html')->slurp );
-            $res->finalize;
-        }
+        mount_file '/' => '/public/index.html';
     };
 
 };
