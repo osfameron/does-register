@@ -1,3 +1,5 @@
 postgresql
 postgresql-client
 libpq-dev
+
+ruby-sass
