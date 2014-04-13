@@ -35,18 +35,21 @@
     </script>
 </head>
 <body>
+
+  <div class="content">
+
     <table id="members" ng-controller="MemberCtrl">
         <thead>
             <tr>
-                <th colspan=3> &nbsp; </th>
+                <th colspan=3> User </th>
                 <th colspan=2> PAYG </th>
                 <th colspan=2> Time </th>
                 <th> &nbsp; </th>
             </tr>
             <tr>
                 <th> &nbsp; </th> <!-- gravatar -->
-                <th> User </th> <!-- clickable -->
-                <th> &nbsp; </th> <!-- Org,Perm,Tech,Ws,Fr,Fwb,Hd -->
+                <th> Name </th> <!-- clickable -->
+                <th> Type </th> <!-- Org,Perm,Tech,Ws,Fr,Fwb,Hd -->
                 <th> left </th> <!-- number, and + to add more -->
                 <th> used </th> <!-- select -->
                 <th> in </th> <!-- hh:mm -->
@@ -74,5 +77,6 @@
             </tr>
         </tbody>
     </table>
+  </div>
 </body>  
 </html>

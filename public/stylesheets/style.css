@@ -1,4 +1,10 @@
+@media screen and (min-width: 1024px) {
+  .content {
+    width: 1024px;
+    margin: 0 auto; } }
+
 table {
+  width: 100%;
   /* border-collapse: collapse; // border-collapse doesn't play nicely with rounded corners -- */
   border-spacing: 0; }
   table thead tr:first-child th:first-child {
@@ -21,20 +27,20 @@ table {
     width: 48px;
     height: 48px; }
   table th {
-    background: #ccaa00;
+    background: #2ca25f;
     padding: 0.25em; }
-  table td, table th {
-    border: solid 1px #ccaa00; }
+  table td {
+    border: solid 1px #99d869; }
   table tr.inactive td {
     opacity: 0.4;
     filter: alpha(opacity=40); }
   table td {
-    background: #ffffcc;
+    background: #e5f5f9;
     padding: 0.25em; }
     table td.unpadded {
       padding: 0; }
     table td.overdue {
-      background: #ffaaaa; }
+      background: #f03b20; }
     table td.num {
       text-align: right; }
 
