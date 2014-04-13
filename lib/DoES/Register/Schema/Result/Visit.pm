@@ -27,9 +27,20 @@ column created_date => {
 };
 
 column visit_date => {
-    data_type => 'datetime',
+    data_type => 'date',
     is_nullable => 0,
     set_on_create => 1,
+};
+
+column time_in => {
+    data_type => 'time',
+    is_nullable => 0,
+    set_on_create => 1,
+};
+
+column time_out => {
+    data_type => 'time',
+    is_nullable => 1,
 };
 
 column days_used => {
@@ -48,5 +59,6 @@ column num_guests => {
 };
 
 belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
+unique_constraint [qw/ member_id visit_date /];
 
 1;
