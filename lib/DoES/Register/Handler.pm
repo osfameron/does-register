@@ -21,7 +21,18 @@ sub run {
         $self->on( hello => sub {
                 my ($self, $fun) = @_;
 
-                $self->emit( members => ['TODO'] );
+                $self->emit( members => [
+                    {
+                        name => 'Henry',
+                        active => 1,
+                        icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
+                        types => 'Orga,Perm',
+                        left => 0,
+                        used => 0,
+                        in => '9:30',
+                        out=> undef,
+                    }
+                ]);
             }
         );
     }
