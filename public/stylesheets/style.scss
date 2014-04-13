@@ -32,6 +32,9 @@ table {
     td {
         border: solid 1px $mid;
     }
+    tr td:first-child {
+        width: 50px;
+    }
     tr.inactive td {
         opacity: 0.4;
         filter: alpha(opacity=40);
