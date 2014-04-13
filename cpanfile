@@ -10,7 +10,8 @@ requires 'DBIx::Class::Migration';
 requires 'DBIx::Class::Candy';
 requires 'Test::PostgreSQL';
 requires 'DBIx::Class::InflateColumn::DateTime';
-requires 'DBIx::Class::TimeStamp;
+requires 'DBIx::Class::TimeStamp';
+requires 'Test::PostgreSQL';
 
 requires 'Test::Most';
 requires 'Test::Pretty';
