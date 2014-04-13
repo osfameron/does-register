@@ -9,7 +9,7 @@ primary_column id => {
     is_auto_increment => 1,
 };
 
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -53,6 +53,6 @@ column is_cake_day => {
     default_value => 0,
 };
 
-belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
 
 1;

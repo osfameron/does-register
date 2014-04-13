@@ -9,7 +9,7 @@ primary_column id => {
     is_auto_increment => 1,
 };
 
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -47,7 +47,7 @@ column end_date => {
     is_nullable => 1,
 };
 
-belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
-belongs_to type => 'DoES::Register::Schema::Result::User' => 'type_id';
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
+belongs_to type => 'DoES::Register::Schema::Result::Type' => 'type_id';
 
 1;

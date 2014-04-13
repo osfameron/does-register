@@ -1,4 +1,4 @@
-package DoES::Register::Schema::Result::User;
+package DoES::Register::Schema::Result::Member;
 
 use DBIx::Class::Candy
     -autotable => v1,
