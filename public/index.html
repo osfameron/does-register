@@ -53,7 +53,7 @@
                 <th> left </th> <!-- number, and + to add more -->
                 <th> used </th> <!-- select -->
                 <th> in </th> <!-- hh:mm -->
-                <th> out </th> <!-- hh:mm or button -->
+                <th> out </th> <!-- hh:mm or none -->
                 <th> &nbsp; </th>
             </tr>
         </thead>
@@ -63,16 +63,9 @@
                 <td> {{ member.name }} </td>
                 <td> {{ member.types }} </td>
                 <td class="num"> {{ member.left }} </td>
-                <td> 
-                    <select ng-model="member.used">
-                        <option selected>0</option> 
-                        <option>0.25</option> 
-                        <option>0.5</option> 
-                        <option>1</option>
-                    </select>
-                </td>
-                <td> {{ member.in }} </td>
-                <td> <button>Left</button> </td>
+                <td class="num"> {{ member.used }} </td>
+                <td class="time"> {{ member.in }} </td>
+                <td class="time"> &rarr; </td>
                 <td> &nbsp; </td>
             </tr>
         </tbody>

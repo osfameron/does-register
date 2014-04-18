@@ -31,20 +31,25 @@ table {
     padding: 0.25em; }
   table td {
     border: solid 1px #99d869; }
-  table tr td:first-child {
-    width: 50px; }
   table tr.inactive td {
     opacity: 0.4;
     filter: alpha(opacity=40); }
   table td {
     background: #e5f5f9;
     padding: 0.25em; }
+    table td:first-child {
+      /* .image? */
+      width: 50px; }
     table td.unpadded {
       padding: 0; }
     table td.overdue {
       background: #f03b20; }
     table td.num {
-      text-align: right; }
+      text-align: right;
+      width: 3em; }
+    table td.time {
+      text-align: center;
+      width: 5em; }
 
 select, button {
   border-radius: 0.25em;
