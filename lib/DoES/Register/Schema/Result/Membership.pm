@@ -38,12 +38,12 @@ column created_date => {
 };
 
 column start_date => {
-    data_type => 'datetime',
+    data_type => 'date',
     is_nullable => 0,
 };
 
 column end_date => {
-    data_type => 'datetime',
+    data_type => 'date',
     is_nullable => 1,
 };
 
