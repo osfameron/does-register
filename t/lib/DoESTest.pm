@@ -29,7 +29,7 @@ sub setup_fixtures {
     # have to fiddle with configs
     my ($self, $db) = @_;
 
-    my $type_rs = $db->resultset('Type');
+    my $type_rs = $db->resultset('MembershipType');
     $type_rs->create({ name => 'orga' });
     $type_rs->create({ name => 'perm', unlimited => 1 });
     $type_rs->create({ name => 'ws', unlimited => 1 });

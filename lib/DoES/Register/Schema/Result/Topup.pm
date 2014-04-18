@@ -9,7 +9,7 @@ primary_column id => {
     is_auto_increment => 1,
 };
 
-column member_id => {
+column user_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -47,12 +47,6 @@ column freeagent_invoice_id => {
     is_nullable => 1,
 };
 
-column is_cake_day => {
-    data_type => 'boolean',
-    is_nullable => 0,
-    default_value => 0,
-};
-
-belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
+belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
 
 1;

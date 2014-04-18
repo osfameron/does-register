@@ -11,6 +11,6 @@ use DoESTest;
 my $app = DoESTest->new;
 
 my $db = $app->db;
-is $db->resultset('Type')->count, 5;
+is $db->resultset('MembershipType')->count, 5;
 
 done_testing;

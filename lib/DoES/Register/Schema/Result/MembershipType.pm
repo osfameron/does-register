@@ -1,4 +1,4 @@
-package DoES::Register::Schema::Result::Type;
+package DoES::Register::Schema::Result::MembershipType;
 
 use DBIx::Class::Candy
     -autotable => v1,

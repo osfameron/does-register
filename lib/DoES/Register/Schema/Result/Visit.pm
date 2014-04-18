@@ -9,7 +9,7 @@ primary_column id => {
     is_auto_increment => 1,
 };
 
-column member_id => {
+column user_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -58,7 +58,8 @@ column num_guests => {
     default_value => 0,
 };
 
-belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
-unique_constraint [qw/ member_id visit_date /];
+belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
+unique_constraint [qw/ user_id visit_date /];
+might_have cake_day => 'DoES::Register::Schema::Result::Cake';
 
 1;
