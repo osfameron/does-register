@@ -17,7 +17,7 @@ column freeagent_contact_id => {
 column name => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 1,
+    is_nullable => 0,
 };
 
 column comment => {
@@ -41,10 +41,12 @@ column updated_date => {
 column default_daily_usage_cap => {
     data_type => 'numeric(3,2)',
     is_nullable => 0,
-    default_value => 1,
+    default_value => 1.00,
 };
 
-might_have cake_day => 'DoES::Register::Schema::Result::Cake';
+might_have cake      => 'DoES::Register::Schema::Result::Cake', 'user_id';
+has_many memberships => 'DoES::Register::Schema::Result::Membership', 'user_id';
+has_many visits      => 'DoES::Register::Schema::Result::Visit', 'user_id';
 
 1;
 

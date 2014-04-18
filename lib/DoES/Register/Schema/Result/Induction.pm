@@ -63,12 +63,17 @@ column created_date => {
 };
 
 for my $col (qw/ 
-        knows_where_toilets_are
-        knows_where_fire_exits_are
-        knows_where_kitchen_is
-        knows_who_to_contact
-        is_aware_of_workshop_area
-        understands_items_left_at_own_risk
+        knows_location_toilets
+        knows_location_fire_exits
+        knows_location_kitchen
+        knows_contact_details
+        knows_about_workshop
+        knows_items_left_at_own_risk
+        knows_clear_desk_policy
+        knows_about_mailing_list
+        knows_about_doorbot
+        knows_about_wiki
+        opt_out_of_newsletter
         /
 ) {
     column $col => {

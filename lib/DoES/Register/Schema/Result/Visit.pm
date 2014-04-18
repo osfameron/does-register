@@ -33,13 +33,13 @@ column visit_date => {
 };
 
 column time_in => {
-    data_type => 'time',
+    data_type => 'datetime',
     is_nullable => 0,
     set_on_create => 1,
 };
 
 column time_out => {
-    data_type => 'time',
+    data_type => 'datetime',
     is_nullable => 1,
 };
 
@@ -60,6 +60,6 @@ column num_guests => {
 
 belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
 unique_constraint [qw/ user_id visit_date /];
-might_have cake_day => 'DoES::Register::Schema::Result::Cake';
+might_have cake => 'DoES::Register::Schema::Result::Cake', 'visit_id';
 
 1;

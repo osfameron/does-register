@@ -48,6 +48,6 @@ column end_date => {
 };
 
 belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
-belongs_to membership_type => 'DoES::Register::Schema::Result::MembershipType' => 'membership_type_id';
+belongs_to type => 'DoES::Register::Schema::Result::MembershipType' => 'membership_type_id';
 
 1;
