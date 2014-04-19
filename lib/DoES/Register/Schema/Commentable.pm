@@ -1,12 +1,14 @@
 package DoES::Register::Schema::Commentable;
 use parent 'DoES::Register::Schema::BaseObject';
 
-__PACKAGE__->table('BaseCommentable'); # DUMMY
+use DBIx::Class::Candy;
 
-__PACKAGE__->add_columns( comment => {
+table 'BaseCommentable'; # DUMMY
+
+column comment => {
     data_type => 'varchar',
     is_nullable => 0,
     default_value => '',
-});
+};
 
 1;
