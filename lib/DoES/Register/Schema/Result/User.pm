@@ -26,5 +26,13 @@ has_many visits      => 'DoES::Register::Schema::Result::Visit', 'user_id';
 
 subclass;
 
+sub unlimited {
+    my $self = shift;
+    return $self->memberships->find(
+        { 'type.unlimited' => 1 },
+        { join => 'type' },
+    );
+}
+
 1;
 

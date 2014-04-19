@@ -47,6 +47,12 @@ sub setup_fixtures {
         fwb      => $type_rs->create({ name => 'fwb' }),
     );
 
+    my $day_rs = $db->resultset('Day');
+    $day_rs->create({ days_used => 0.00 });
+    $day_rs->create({ days_used => 0.25, cutoff => '18:00', max_hours => 3 });
+    $day_rs->create({ days_used => 0.50, cutoff => '12:00', max_hours => 6 });
+    $day_rs->create({ days_used => 1.00 });
+
     my $user_rs = $db->resultset('User');
     my $membership_rs = $db->resultset('Membership');
 
