@@ -1,15 +1,8 @@
 package DoES::Register::Schema::Result::MembershipType;
 
-use DBIx::Class::Candy
-    -autotable => v1,
-    #-components => ['InflateColumn::DateTime', 'TimeStamp'];
-    ;
+use DoES::Register::Schema::Candy
+    -base => 'BaseObject';
 
-primary_column id => {
-    data_type => 'int',
-    is_auto_increment => 1,
-};
- 
 unique_column name => {
     data_type => 'varchar',
     size => 255,
@@ -22,4 +15,5 @@ column unlimited => {
     default_value => 0,
 };
 
+subclass;
 1;

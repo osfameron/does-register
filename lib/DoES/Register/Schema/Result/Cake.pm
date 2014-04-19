@@ -1,18 +1,7 @@
 package DoES::Register::Schema::Result::Cake;
 
-use DBIx::Class::Candy
-    -autotable => v1,
-    -components => ['InflateColumn::DateTime', 'TimeStamp'];
-
-primary_column id => {
-    data_type => 'int',
-    is_auto_increment => 1,
-};
-
-column comment => {
-    data_type => 'varchar',
-    is_nullable => 0,
-};
+use DoES::Register::Schema::Candy
+    -base => 'Commentable';
 
 unique_column user_id => {
     data_type => 'int',
@@ -34,4 +23,5 @@ belongs_to topup => 'DoES::Register::Schema::Result::Topup' => 'topup_id', { joi
 belongs_to visit => 'DoES::Register::Schema::Result::Visit', 'visit_id', { join_type => 'left' };
 might_have cake => 'DoES::Register::Schema::Result::Cake';
 
+subclass;
 1;

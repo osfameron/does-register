@@ -22,6 +22,9 @@ ok $user_a, 'Alice retrieved' and do {
     ok $user_a->cake, 'Alice has had cake day';
 };
 
+# check that inheritance structure is OK
+can_ok $user_a, qw/ id created_date updated_date comment /; 
+
 my $user_b = $user_rs->find({ name => 'Bob' });
 ok $user_b, 'Bob retrieved' and do {
     ok ! $user_b->cake, 'Bob has not had cake day';

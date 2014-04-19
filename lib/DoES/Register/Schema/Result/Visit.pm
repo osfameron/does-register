@@ -1,29 +1,11 @@
 package DoES::Register::Schema::Result::Visit;
 
-use DBIx::Class::Candy
-    -autotable => v1,
-    -components => ['InflateColumn::DateTime', 'TimeStamp'];
-
-primary_column id => {
-    data_type => 'int',
-    is_auto_increment => 1,
-};
+use DoES::Register::Schema::Candy
+    -base => 'Commentable';
 
 column user_id => {
     data_type => 'int',
     is_nullable => 0,
-};
-
-column comment => {
-    data_type => 'varchar',
-    size => 255,
-    is_nullable => 1,
-};
-
-column created_date => {
-    data_type => 'datetime',
-    is_nullable => 0,
-    set_on_create => 1,
 };
 
 column visit_date => {
@@ -61,5 +43,7 @@ column num_guests => {
 belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
 unique_constraint [qw/ user_id visit_date /];
 might_have cake => 'DoES::Register::Schema::Result::Cake', 'visit_id';
+
+subclass;
 
 1;

@@ -8,6 +8,7 @@ requires 'DBD::Pg';
 requires 'DBIx::Class';
 requires 'DBIx::Class::Migration';
 requires 'DBIx::Class::Candy';
+requires 'DBIx::Class::Helper::Row::SubClass';
 requires 'Test::PostgreSQL';
 requires 'DBIx::Class::InflateColumn::DateTime';
 requires 'DBIx::Class::TimeStamp';
