@@ -104,7 +104,13 @@ sub check_visit_flagged {
     });
 
     my $visit = $db->resultset('Visit')->visits_on_day->first;
-    is $visit->get_column('flagged_hours'), $flagged, $desc
+    is $visit->flagged_hours, $flagged, $desc
+        or diag Dumper({ $visit->get_columns });
+
+    # as well as the optimized flagging from DB search, we can calculate
+    # flagged_hours within the DB object.  Check we get same result
+    $visit->discard_changes;
+    is $visit->flagged_hours, $flagged, $desc
         or diag Dumper({ $visit->get_columns });
 
     $db->txn_rollback;

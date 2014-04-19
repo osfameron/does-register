@@ -79,4 +79,30 @@ sub get_initial_days_used {
     return min( $guess, $cap );
 }
 
+sub total_time { # in fractional hours
+    my $self = shift;
+
+    return $self->get_column('total_time') if $self->has_column_loaded('total_time');
+
+    my $time_out = $self->time_out or return;
+    my $time_in = $self->time_in;
+
+    return ($time_out->epoch - $time_in->epoch) / 3600;
+}
+
+sub flagged_hours {
+    my $self = shift;
+    return $self->get_column('flagged_hours') if $self->has_column_loaded('flagged_hours');
+
+    my $total_time = $self->total_time;
+    return 0 unless defined $total_time;
+
+    my $usage = $self->usage;
+
+    return 1 if $total_time > $self->usage->max_hours;
+    return 1 if $total_time < $self->usage->min_hours;
+
+    return 0;
+}
+
 1;
