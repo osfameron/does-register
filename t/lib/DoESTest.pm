@@ -51,37 +51,37 @@ sub setup_fixtures {
     $usage_rs->create({ days_used => 0.00 });
     $usage_rs->create({ days_used => 0.25, cutoff => '18:00', max_hours => 3 });
     $usage_rs->create({ days_used => 0.50, cutoff => '12:00', max_hours => 6 });
-    $usage_rs->create({ days_used => 1.00 });
+    $usage_rs->create({ days_used => 1.00, min_hours => 3 });
 
-    my $user_rs = $db->resultset('User');
+    my $member_rs = $db->resultset('Member');
     my $membership_rs = $db->resultset('Membership');
 
-    my $user_a = $user_rs->create({ 
+    my $member_a = $member_rs->create({ 
         name => 'Alice',
         memberships => [
             { type => $types{orga}, start_date => $past },
             { type => $types{perm}, start_date => $past },
         ],
     });
-    my $visit_a = $user_a->create_related( 
+    my $visit_a = $member_a->create_related( 
         visits => {
             visit_date => $past,
             days_used => 0,
         });
-    $user_a->create_related(
+    $member_a->create_related(
         cake => {
             comment => 'lemon drizzle',
             visit => $visit_a,
         });
 
-    my $user_b = $user_rs->create({
+    my $member_b = $member_rs->create({
         name => 'Bob',
         memberships => [
             { type => $types{perm}, start_date => $past },
         ],
     });
 
-    my $user_c = $user_rs->create({
+    my $member_c = $member_rs->create({
         name => 'Colin',
         memberships => [
             { type => $types{payg}, start_date => $past },

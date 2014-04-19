@@ -6,7 +6,7 @@ use DoES::Register::Schema::Candy
 
 use List::Util 'min';
 
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -42,8 +42,8 @@ column num_guests => {
     default_value => 0,
 };
 
-belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
-unique_constraint [qw/ user_id visit_date /];
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
+unique_constraint [qw/ member_id visit_date /];
 might_have cake => 'DoES::Register::Schema::Result::Cake', 'visit_id';
 has_one usage => 'DoES::Register::Schema::Result::Usage', { 'foreign.days_used' => 'self.days_used' };
 
@@ -60,9 +60,9 @@ around new => sub {
 
 sub get_initial_days_used {
     my $self = shift;
-    my $user = $self->user;
-    return '0.00' if $user->unlimited;
-    my $cap = $user->default_daily_usage_cap or return '0.00';
+    my $member = $self->member;
+    return '0.00' if $member->unlimited;
+    my $cap = $member->default_daily_usage_cap or return '0.00';
 
     my $usage_rs = $self->result_source->schema->resultset('Usage');
 

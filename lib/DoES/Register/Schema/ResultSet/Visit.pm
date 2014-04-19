@@ -12,17 +12,17 @@ sub visits_on_day {
             visit_date => $day,
         },
         {
-            prefetch => [ 'cake', 'user' ],
+            prefetch => [ 'cake', 'member', 'usage' ],
         }
     );
 }
 
 sub visit_now {
-    my ($self, $user) = @_;
+    my ($self, $member) = @_;
     my $now = DateTime->now;
 
     $self->find_or_create({
-        user => $user,
+        member => $member,
         visit_date => $now,
         time_in => $now,
     });

@@ -1,4 +1,4 @@
-package DoES::Register::Schema::Result::User;
+package DoES::Register::Schema::Result::Member;
 
 use DoES::Register::Schema::Candy
     -base => 'Commentable';
@@ -20,9 +20,9 @@ column default_daily_usage_cap => {
     default_value => 1.00,
 };
 
-might_have cake      => 'DoES::Register::Schema::Result::Cake', 'user_id';
-has_many memberships => 'DoES::Register::Schema::Result::Membership', 'user_id';
-has_many visits      => 'DoES::Register::Schema::Result::Visit', 'user_id';
+might_have cake      => 'DoES::Register::Schema::Result::Cake', 'member_id';
+has_many memberships => 'DoES::Register::Schema::Result::Membership', 'member_id';
+has_many visits      => 'DoES::Register::Schema::Result::Visit', 'member_id';
 
 # make sure usage cap is set up in DB
 has_one usage => 'DoES::Register::Schema::Result::Usage', 

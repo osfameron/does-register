@@ -3,7 +3,7 @@ package DoES::Register::Schema::Result::Induction;
 use DoES::Register::Schema::Candy
     -base => 'BaseObject';
 
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -71,7 +71,7 @@ for my $col (qw/
     };
 }
 
-belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
 
 subclass;
 1;

@@ -3,7 +3,7 @@ package DoES::Register::Schema::Result::Topup;
 use DoES::Register::Schema::Candy
     -base => 'Commentable';
 
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 0,
 };
@@ -29,7 +29,7 @@ column freeagent_invoice_id => {
     is_nullable => 1,
 };
 
-belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
 
 subclass;
 

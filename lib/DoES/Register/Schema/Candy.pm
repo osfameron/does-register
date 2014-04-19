@@ -10,7 +10,6 @@ sub gen_table {
     my ($self, $class) = @_;
     my @parts = split /::/, $class;
     my $table = lc $parts[-1];
-    $table =~s/^user$/users/;
     return $table;
 }
 

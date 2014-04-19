@@ -8,12 +8,12 @@ column rfid => {
     is_nullable => 0,
 };
  
-column user_id => {
+column member_id => {
     data_type => 'int',
     is_nullable => 1,
 };
 
-belongs_to user  => 'DoES::Register::Schema::Result::User' => 'user_id', { join_type => 'left' };
+belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id', { join_type => 'left' };
 
 subclass;
 
