@@ -51,7 +51,7 @@ sub setup_fixtures {
     $usage_rs->create({ days_used => 0.00 });
     $usage_rs->create({ days_used => 0.25, cutoff => '18:00', max_hours => 3 });
     $usage_rs->create({ days_used => 0.50, cutoff => '12:00', max_hours => 6 });
-    $usage_rs->create({ days_used => 1.00, min_hours => 3 });
+    $usage_rs->create({ days_used => 1.00, min_hours => 4 });
 
     my $member_rs = $db->resultset('Member');
     my $membership_rs = $db->resultset('Membership');
