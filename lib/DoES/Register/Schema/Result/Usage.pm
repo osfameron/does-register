@@ -1,4 +1,4 @@
-package DoES::Register::Schema::Result::Day;
+package DoES::Register::Schema::Result::Usage;
 
 use DoES::Register::Schema::Candy
     -base => 'Commentable';

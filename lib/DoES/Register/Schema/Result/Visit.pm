@@ -31,8 +31,7 @@ column time_out => {
 column days_used => {
     data_type => 'numeric(3,2)',
     is_nullable => 0,
-    default_value => 1.00, # but override with checkin-time calculation
-                           # supplemented with user's default_daily_usage_cap
+    default_value => 1.00, # but see below
 };
 
 # ideally we should log guests as people too, but sometimes not practical so
@@ -46,6 +45,7 @@ column num_guests => {
 belongs_to user => 'DoES::Register::Schema::Result::User' => 'user_id';
 unique_constraint [qw/ user_id visit_date /];
 might_have cake => 'DoES::Register::Schema::Result::Cake', 'visit_id';
+has_one usage => 'DoES::Register::Schema::Result::Usage', { 'foreign.days_used' => 'self.days_used' };
 
 subclass;
 
@@ -64,10 +64,10 @@ sub get_initial_days_used {
     return '0.00' if $user->unlimited;
     my $cap = $user->default_daily_usage_cap or return '0.00';
 
-    my $day_rs = $self->result_source->schema->resultset('Day');
+    my $usage_rs = $self->result_source->schema->resultset('Usage');
 
     # TODO move to ::RS::Day
-    my $guess = $day_rs->search(
+    my $guess = $usage_rs->search(
         {
             cutoff => { '<=', $self->time_in->time },
         },

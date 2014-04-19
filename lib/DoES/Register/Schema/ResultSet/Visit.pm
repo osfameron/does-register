@@ -1,4 +1,5 @@
 package DoES::Register::Schema::ResultSet::Visit;
+use strict; use warnings;
 use parent 'DBIx::Class::ResultSet';
 use DateTime;
 
@@ -16,11 +17,11 @@ sub visits_on_day {
     );
 }
 
-sub new_visit {
+sub visit_now {
     my ($self, $user) = @_;
     my $now = DateTime->now;
 
-    $self->create({
+    $self->find_or_create({
         user => $user,
         visit_date => $now,
         time_in => $now,
