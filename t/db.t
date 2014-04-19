@@ -42,6 +42,11 @@ subtest 'bob' => sub {
     ok $member_b, 'Bob retrieved' and do {
         ok ! $member_b->cake, 'Bob has not had cake day';
     };
+
+    check_visit_flagged( $member_b, 9 => 12, 0.50, 0, 'Half day not flagged' );
+    check_visit_flagged( $member_b, 9 => 17, 0.50, 1, 'Overly long half day flagged' );
+    check_visit_flagged( $member_b, 9 => 17, 1.00, 0, 'Full day not flagged' );
+    check_visit_flagged( $member_b, 9 => 11, 1.00, 1, 'Overly short full day flagged' );
 };
 
 subtest 'colin (payg)' => sub {
@@ -78,6 +83,23 @@ sub check_times {
         });
         is $visit->days_used, $days_used, "In $time_in, days_used $days_used";
     }
+}
+
+sub check_visit_flagged {
+    my ($member, $in, $out, $days_used, $flagged, $desc) = @_;
+
+    $db->txn_begin;
+    $member->visits->create({
+        visit_date => $today,
+        time_in => $today->clone->set( hour => $in, minute => 0 ),
+        time_out => $today->clone->set( hour => $out, minute => 0 ),
+        days_used => $days_used,
+    });
+
+    my $visit = $db->resultset('Visit')->visits_on_day->first;
+    is $visit->get_column('flagged_hours'), $flagged, $desc;
+
+    $db->txn_rollback;
 }
 
 done_testing;
