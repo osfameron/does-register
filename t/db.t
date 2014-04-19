@@ -1,6 +1,8 @@
 use strict; use warnings;
-use Test::Most;
 use feature 'say';
+
+use Test::Most;
+use Data::Dumper;
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
@@ -35,6 +37,9 @@ subtest 'alice (orga/perm)' => sub {
         [ '12:30' => '0.00' ],
         [ '18:30' => '0.00' ],
     ]);
+
+    check_visit_flagged( $member_a, 9 => 11, 0.00, 0, '0 usage never flagged' );
+    check_visit_flagged( $member_a, 9 => 17, 0.00, 0, '0 usage never flagged' );
 };
 
 subtest 'bob' => sub {
@@ -88,6 +93,8 @@ sub check_times {
 sub check_visit_flagged {
     my ($member, $in, $out, $days_used, $flagged, $desc) = @_;
 
+    # NB: we're overriding whatever the default days_used would be here
+
     $db->txn_begin;
     $member->visits->create({
         visit_date => $today,
@@ -97,7 +104,8 @@ sub check_visit_flagged {
     });
 
     my $visit = $db->resultset('Visit')->visits_on_day->first;
-    is $visit->get_column('flagged_hours'), $flagged, $desc;
+    is $visit->get_column('flagged_hours'), $flagged, $desc
+        or diag Dumper({ $visit->get_columns });
 
     $db->txn_rollback;
 }
