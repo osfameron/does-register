@@ -8,7 +8,7 @@ column member_id => {
 };
 
 column topup_date => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     set_on_create => 1,
 };
 

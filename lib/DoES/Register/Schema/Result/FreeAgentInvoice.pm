@@ -8,7 +8,7 @@ column freeagent_id => {
 };
 
 column freeagent_invoice_date => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     timezone => 'UTC',
 };
 

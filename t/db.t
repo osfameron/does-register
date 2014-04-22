@@ -156,7 +156,7 @@ subtest 'members available to visit' => sub {
     is $member_rs->not_currently_visiting()->count, 0, 'No more members';
 
     my $visits = $visit_rs->visits_on_day;
-    is $visits->count, 4;
+    is $visits->count, 4, '4 visits';
     my $visits_struct = [ map $_->to_struct, $visits->all ];
     cmp_deeply $visits_struct,
         [
@@ -171,8 +171,7 @@ subtest 'members available to visit' => sub {
             'active' => 1,
             'name' => 'Alice',
             'flagged_hours' => 0,
-            # 'in' => '09:00:00',
-            'in' => re('\d{2}:00:00'),
+            'in' => '09:00:00',
             'used' => 0
           },
           {
@@ -185,8 +184,7 @@ subtest 'members available to visit' => sub {
             'active' => 1,
             'name' => 'Bob',
             'flagged_hours' => 0,
-            # 'in' => '10:00:00',
-            'in' => re('\d{2}:00:00'),
+            'in' => '10:00:00',
             'used' => 0
           },
           {
@@ -199,8 +197,7 @@ subtest 'members available to visit' => sub {
             'active' => 1,
             'name' => 'Colin',
             'flagged_hours' => 0,
-            # 'in' => '11:00:00',
-            'in' => re('\d{2}:00:00'),
+            'in' => '11:00:00',
             'used' => 0
           },
           {
@@ -213,14 +210,10 @@ subtest 'members available to visit' => sub {
             'active' => 1,
             'name' => 'Deirdre',
             'flagged_hours' => 1,
-            # 'in' => '12:00:00',
-            'in' => re('\d{2}:00:00'),
+            'in' => '12:00:00',
             'used' => 0
           }
         ], 'Visits structure ok';
-
-    local $TODO = 'Fix DB structure for timestamp with time zone';
-    is $visits_struct->[0]{in}, '09:00:00', 'Time correct, with DST';
 
     restore_time;
     $db->txn_rollback;

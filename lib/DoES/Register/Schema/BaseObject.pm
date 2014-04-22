@@ -11,13 +11,13 @@ primary_column id => {
 };
 
 column created_date => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     timezone => 'UTC',
     set_on_create => 1,
 };
 
 column updated_date => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     timezone => 'UTC',
     is_nullable => 1,
     set_on_update => 1,

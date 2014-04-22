@@ -17,13 +17,13 @@ column visit_date => {
 };
 
 column time_in => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     set_on_create => 1,
     timezone => 'UTC',
 };
 
 column time_out => {
-    data_type => 'datetime',
+    data_type => 'timestamp with time zone',
     is_nullable => 1,
     timezone => 'UTC',
 };
