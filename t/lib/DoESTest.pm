@@ -23,6 +23,7 @@ has dsn => (
     # isa => 'Str',
     default => sub {
         my $self = shift;
+        $ENV{DOES_TEST_DB_DEPLOYED}++ if $ENV{DOES_TEST_DSN};
         my $dsn = $ENV{DOES_TEST_DSN} ||= $self->test_postgresql->dsn;
         print STDERR "# DSN: $dsn\n";
         return $dsn;
