@@ -18,8 +18,8 @@ my $today  = DateTime->today;
 
 subtest 'sanity' => sub {
     is $db->resultset('MembershipType')->count, 8;
-    is $db->resultset('Member')->count, 3;
-    is $db->resultset('Membership')->count, 4;
+    is $db->resultset('Member')->count, 4;
+    is $db->resultset('Membership')->count, 5;
 };
 
 my $member_rs = $db->resultset('Member');
@@ -71,15 +71,19 @@ subtest 'colin (payg)' => sub {
         [ '12:30' => '0.50' ],
         [ '18:30' => '0.25' ],
     ]);
+};
 
-    $db->txn_begin;
-    $member_c->update({ default_daily_usage_cap => '0.50' });
-    check_times( $member_c, [
+subtest 'deirdre (payg halfdays)' => sub {
+    my $member_d = $member_rs->find({ name => 'Deirdre' });
+    ok $member_d, 'Deirdre retrieved' and do {
+        ok ! $member_d->cake, 'Colin has not had cake day';
+    };
+
+    check_times( $member_d, [
         [ '09:30' => '0.50' ],
         [ '12:30' => '0.50' ],
         [ '18:30' => '0.25' ],
     ]);
-    $db->txn_rollback;
 };
 
 sub check_times {

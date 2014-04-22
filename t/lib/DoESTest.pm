@@ -86,6 +86,15 @@ sub setup_fixtures {
             { type => $types{payg}, start_date => $past },
         ]
     });
+
+    my $member_d = $member_rs->create({
+        name => 'Deirdre',
+        memberships => [
+            { type => $types{payg}, start_date => $past },
+        ],
+        default_daily_usage_cap => 0.5,
+        comment => 'Usually does half days',
+    });
 }
 
 1;
