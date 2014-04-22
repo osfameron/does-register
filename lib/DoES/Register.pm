@@ -30,4 +30,14 @@ has pocket_io => (
     },
 );
 
+has time_zone => (
+    is => 'ro',
+    default => 'Europe/London',
+);
+
+sub now {
+    my $self = shift;
+    DateTime->now( time_zone => $self->time_zone );
+}
+
 1;

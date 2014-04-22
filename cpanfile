@@ -16,6 +16,7 @@ requires 'Test::PostgreSQL';
 
 requires 'Test::Most';
 requires 'Test::Pretty';
+requires 'Test::MockTime';
 requires 'App::ForkProve';
 requires 'Test::DBIx::Class';
 

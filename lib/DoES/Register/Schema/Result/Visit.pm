@@ -90,17 +90,31 @@ sub total_time { # in fractional hours
     return ($time_out->epoch - $time_in->epoch) / 3600;
 }
 
+sub elapsed_time {
+    my $self = shift;
+    return $self->get_column('elapsed_time') if $self->has_column_loaded('elapsed_time');
+
+    return $self->total_time // do {
+        my $time_in = $self->time_in;
+        my $now = DateTime->now;
+        return ($now->epoch - $time_in->epoch) / 3600;
+    };
+}
+
 sub flagged_hours {
     my $self = shift;
     return $self->get_column('flagged_hours') if $self->has_column_loaded('flagged_hours');
 
-    my $total_time = $self->total_time;
-    return 0 unless defined $total_time;
-
     my $usage = $self->usage;
+    my $total_time = $self->total_time;
 
-    return 1 if $total_time > $self->usage->max_hours;
-    return 1 if $total_time < $self->usage->min_hours;
+    if (defined $total_time) {
+        return 1 if $total_time < $self->usage->min_hours;
+    }
+
+    my $elapsed_time = $self->elapsed_time;
+
+    return 1 if $elapsed_time > $self->usage->max_hours;
 
     return 0;
 }
