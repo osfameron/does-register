@@ -13,16 +13,19 @@ column member_id => {
 column visit_date => {
     data_type => 'date',
     set_on_create => 1,
+    timezone => 'UTC',
 };
 
 column time_in => {
     data_type => 'datetime',
     set_on_create => 1,
+    timezone => 'UTC',
 };
 
 column time_out => {
     data_type => 'datetime',
     is_nullable => 1,
+    timezone => 'UTC',
 };
 
 column days_used => {
@@ -113,5 +116,28 @@ sub flagged_hours {
 
     return 0;
 }
+
+sub to_struct {
+    my ($self, $time_zone) = @_;
+    my $member = $self->member;
+
+    $time_zone ||= 'Europe/London';
+
+    my $time_in = $self->time_in->set_time_zone($time_zone)->time;
+    my $time_out = $self->time_out ? $self->time_out->set_time_zone($time_zone)->time : undef;
+
+    return {
+        name => $member->name,
+        active => ! $self->time_out,
+        icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
+        types => [ map $_->type->name, $member->memberships ],
+        left => 0,
+        used => 0,
+        in => $time_in,
+        out=> $time_out,
+        flagged_hours => $self->flagged_hours,
+    }
+}
+
 
 1;

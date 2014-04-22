@@ -36,16 +36,18 @@ sub visits_on_day {
 }
 
 sub visit_now {
-    my ($self, $member) = @_;
-    my $now = DateTime->now;
+    my ($self, $member, $override_now) = @_;
+    my $now = $override_now || DateTime->now;
 
     my $dtf = $self->result_source->schema->storage->datetime_parser;
 
-    $self->find_or_create({
+    my $visit = $self->find_or_create({
         member     => $member,
         visit_date => $dtf->format_date($now),
         time_in    => $dtf->format_datetime($now),
     });
+
+    return $visit;
 }
 
 1;

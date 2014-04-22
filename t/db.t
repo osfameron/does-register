@@ -2,6 +2,7 @@ use strict; use warnings;
 use feature 'say';
 
 use Test::Most;
+use Test::Deep;
 use Test::MockTime ':all';
 use Data::Dumper;
 
@@ -14,7 +15,10 @@ use DoESTest;
 
 my $app = DoESTest->new;
 my $db = $app->db;
-my $today  = DateTime->today;
+
+sub today {
+    DateTime->today->set_time_zone($app->time_zone);
+}
 
 subtest 'sanity' => sub {
     is $db->resultset('MembershipType')->count, 8;
@@ -94,8 +98,8 @@ sub check_times {
         my ($hh,$mm) = split /:/, $time_in;
 
         my $visit = $member->visits->new({
-            visit_date => $today,
-            time_in => $today->clone->set( hour => $hh, minute => $mm ),
+            visit_date => today,
+            time_in => today->set( hour => $hh, minute => $mm ),
         });
         is $visit->days_used, $days_used, "In $time_in, days_used $days_used";
     }
@@ -107,12 +111,12 @@ sub check_visit_flagged {
     # NB: we're overriding whatever the default days_used would be here
 
     $db->txn_begin;
-    my $now = $today->clone->set( hour => $out // $time_now, minute => 0 );
+    my $now = today->set( hour => $out // $time_now, minute => 0 );
     set_absolute_time( $now );
 
     $member->visits->create({
-        visit_date => $today,
-        time_in => $today->clone->set( hour => $in, minute => 0 ),
+        visit_date => today,
+        time_in => today->set( hour => $in, minute => 0 ),
         time_out => $out ? $now : undef,
         days_used => $days_used,
     });
@@ -137,14 +141,88 @@ subtest 'members available to visit' => sub {
     my @members = $member_rs->all;
     my $current_count = scalar @members;
 
+    my $time_in = 9;
+
+    # $TODO, $now should be in summertime
     for my $member (@members) {
+        my $now = today->set( hour => $time_in++, minute => 0 );
+
+        set_absolute_time( $now );
         is $member_rs->not_currently_visiting()->count, $current_count,
             "Correct number of members available to visit ($current_count)";
-        $visit_rs->visit_now($member);
+        $visit_rs->visit_now($member, $now);
         $current_count--;
     }
     is $member_rs->not_currently_visiting()->count, 0, 'No more members';
 
+    my $visits = $visit_rs->visits_on_day;
+    is $visits->count, 4;
+    my $visits_struct = [ map $_->to_struct, $visits->all ];
+    cmp_deeply $visits_struct,
+        [
+          {
+            'out' => undef,
+            'left' => 0,
+            'icon' => re('https?:.*'),
+            'types' => [
+                         'orga',
+                         'perm'
+                       ],
+            'active' => 1,
+            'name' => 'Alice',
+            'flagged_hours' => 0,
+            # 'in' => '09:00:00',
+            'in' => re('\d{2}:00:00'),
+            'used' => 0
+          },
+          {
+            'out' => undef,
+            'left' => 0,
+            'icon' => re('https?:.*'),
+            'types' => [
+                         'perm'
+                       ],
+            'active' => 1,
+            'name' => 'Bob',
+            'flagged_hours' => 0,
+            # 'in' => '10:00:00',
+            'in' => re('\d{2}:00:00'),
+            'used' => 0
+          },
+          {
+            'out' => undef,
+            'left' => 0,
+            'icon' => 'https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon',
+            'types' => [
+                         'payg'
+                       ],
+            'active' => 1,
+            'name' => 'Colin',
+            'flagged_hours' => 0,
+            # 'in' => '11:00:00',
+            'in' => re('\d{2}:00:00'),
+            'used' => 0
+          },
+          {
+            'out' => undef,
+            'left' => 0,
+            'icon' => 'https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon',
+            'types' => [
+                         'payg'
+                       ],
+            'active' => 1,
+            'name' => 'Deirdre',
+            'flagged_hours' => 1,
+            # 'in' => '12:00:00',
+            'in' => re('\d{2}:00:00'),
+            'used' => 0
+          }
+        ], 'Visits structure ok';
+
+    local $TODO = 'Fix DB structure for timestamp with time zone';
+    is $visits_struct->[0]{in}, '09:00:00', 'Time correct, with DST';
+
+    restore_time;
     $db->txn_rollback;
 };
 
