@@ -39,10 +39,12 @@ sub visit_now {
     my ($self, $member) = @_;
     my $now = DateTime->now;
 
+    my $dtf = $self->result_source->schema->storage->datetime_parser;
+
     $self->find_or_create({
-        member => $member,
-        visit_date => $now,
-        time_in => $now,
+        member     => $member,
+        visit_date => $dtf->format_date($now),
+        time_in    => $dtf->format_datetime($now),
     });
 }
 
