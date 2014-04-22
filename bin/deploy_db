@@ -1,9 +1,25 @@
 #!/usr/bin/env perl
 use strict; use warnings;
 use lib 'lib';
+use feature 'say';
+use Getopt::Long;
+use Data::Dumper;
 
 use DoES::Register;
+require t::lib::DoESTest;
+
+my %opt;
+
+GetOptions \%opt,
+    'setup-fixtures';
 
 my $app = DoES::Register->new;
 
-$app->db->deploy;
+my $db = $app->db;
+
+$db->deploy;
+
+if ($opt{'setup-fixtures'}) {
+    say 'Setting up fixtures';
+    DoESTest->setup_fixtures($db) 
+}

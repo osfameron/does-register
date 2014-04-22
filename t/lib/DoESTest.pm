@@ -6,6 +6,18 @@ use Test::PostgreSQL;
 use FindBin;
 use DateTime;
 
+has '+db' => (
+    default => sub {
+        my $self = shift;
+        my $db = $self->next::method;
+        unless ($ENV{DOES_TEST_DB_DEPLOYED}++) {
+            $db->deploy;
+            $self->setup_fixtures($db);
+        }
+        return $db;
+    }
+);
+
 has dsn => (
     is => 'lazy',
     # isa => 'Str',
@@ -75,14 +87,5 @@ sub setup_fixtures {
         ]
     });
 }
-
-around db => sub {
-    my $orig = shift;
-    my $self = shift;
-    my $db = $self->$orig(@_);
-    $db->deploy unless $ENV{DOES_TEST_DB_DEPLOYED}++;
-    $self->setup_fixtures($db);
-    return $db;
-};
 
 1;
