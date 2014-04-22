@@ -26,7 +26,11 @@ has db => (
 has pocket_io => (
     is => 'lazy',
     default => sub {
-        DoES::Register::Handler->handler;
+        my $self = shift;
+        return PocketIO->new(
+            instance => DoES::Register::Handler->new( db => $self->db ),
+            method => 'run',
+        );
     },
 );
 

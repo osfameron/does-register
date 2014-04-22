@@ -2,15 +2,12 @@ package DoES::Register::Handler;
 use Moo;
 use PocketIO;
 
-sub handler {
-    my $class = shift;
-    return PocketIO->new(
-        class => $class,
-        method => 'run',
-    );
-}
+has db => (
+    is => 'ro',
+);
 
 sub run {
+    my $handler = shift;
     return sub {
         my $self = shift;
 
@@ -21,18 +18,10 @@ sub run {
         $self->on( hello => sub {
                 my ($self, $fun) = @_;
 
-                $self->emit( members => [
-                    {
-                        name => 'Henry',
-                        active => 1,
-                        icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
-                        types => 'Orga,Perm',
-                        left => 0,
-                        used => 0,
-                        in => '9:30',
-                        out=> undef,
-                    }
-                ]);
+                my @visits = map $_->to_struct,
+                    $handler->db->resultset('Visit')->visits_on_day->all;
+
+                $self->emit( members => \@visits );
             }
         );
     }
