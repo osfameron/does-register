@@ -35,26 +35,13 @@ sub setup_fixtures {
     my $past   = $today->clone->subtract( days => 7 );
     my $future = $today->clone->add( days => 7 );
 
-    my $type_rs = $db->resultset('MembershipType');
-    my %types = (
-        orga     => $type_rs->create({ name => 'orga' }),
-        tech     => $type_rs->create({ name => 'tech',     unlimited => 1 }), # technician, interns etc.
-        service  => $type_rs->create({ name => 'service',  unlimited => 1 }), # cleaner, etc.
-        perm     => $type_rs->create({ name => 'perm',     unlimited => 1 }),
-        workshop => $type_rs->create({ name => 'workshop', unlimited => 1 }),
-        payg     => $type_rs->create({ name => 'payg' }),
-        friend   => $type_rs->create({ name => 'friend' }),
-        fwb      => $type_rs->create({ name => 'fwb' }),
-    );
-
-    my $usage_rs = $db->resultset('Usage');
-    $usage_rs->create({ days_used => 0.00 });
-    $usage_rs->create({ days_used => 0.25, cutoff => '18:00', max_hours => 3 });
-    $usage_rs->create({ days_used => 0.50, cutoff => '12:00', max_hours => 6 });
-    $usage_rs->create({ days_used => 1.00, min_hours => 4 });
-
     my $member_rs = $db->resultset('Member');
     my $membership_rs = $db->resultset('Membership');
+
+    my %types;
+    for my $type ($db->resultset('MembershipType')->all) {
+        $types{ $type->name } = $type;
+    }
 
     my $member_a = $member_rs->create({ 
         name => 'Alice',
