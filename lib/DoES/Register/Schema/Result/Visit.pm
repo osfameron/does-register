@@ -8,18 +8,15 @@ use List::Util 'min';
 
 column member_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column visit_date => {
     data_type => 'date',
-    is_nullable => 0,
     set_on_create => 1,
 };
 
 column time_in => {
     data_type => 'datetime',
-    is_nullable => 0,
     set_on_create => 1,
 };
 
@@ -30,7 +27,6 @@ column time_out => {
 
 column days_used => {
     data_type => 'numeric(3,2)',
-    is_nullable => 0,
     default_value => 1.00, # but see below
 };
 
@@ -38,7 +34,6 @@ column days_used => {
 # we allow a +1 column...
 column num_guests => {
     data_type => 'int',
-    is_nullable => 0,
     default_value => 0,
 };
 

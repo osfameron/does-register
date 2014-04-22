@@ -12,12 +12,13 @@ primary_column id => {
 
 column created_date => {
     data_type => 'datetime',
-    is_nullable => 0,
+    timezone => 'UTC',
     set_on_create => 1,
 };
 
 column updated_date => {
     data_type => 'datetime',
+    timezone => 'UTC',
     is_nullable => 1,
     set_on_update => 1,
 };

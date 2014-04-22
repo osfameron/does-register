@@ -5,23 +5,14 @@ use DoES::Register::Schema::Candy
 
 column member_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column membership_type_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
  
-column name => {
-    data_type => 'varchar',
-    size => 255,
-    is_nullable => 1,
-};
-
 column start_date => {
     data_type => 'date',
-    is_nullable => 0,
 };
 
 column end_date => {

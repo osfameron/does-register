@@ -11,7 +11,6 @@ column freeagent_id => {
 column name => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 0,
 };
 
 column email => {

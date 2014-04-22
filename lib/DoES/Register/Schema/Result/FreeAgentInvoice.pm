@@ -5,23 +5,24 @@ use DoES::Register::Schema::Candy
 
 column freeagent_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
-column amout => {
+column freeagent_invoice_date => {
+    data_type => 'datetime',
+    timezone => 'UTC',
+};
+
+column amount => {
     data_type => 'numeric(5,2)',
-    is_nullable => 0,
 };
  
 column freeagent_contact_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column description => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 0,
     default_value => '',
 };
 

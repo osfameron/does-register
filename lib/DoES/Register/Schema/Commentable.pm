@@ -7,7 +7,6 @@ table 'BaseCommentable'; # DUMMY
 
 column comment => {
     data_type => 'varchar',
-    is_nullable => 0,
     default_value => '',
 };
 

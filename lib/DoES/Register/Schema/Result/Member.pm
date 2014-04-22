@@ -11,12 +11,10 @@ column freeagent_contact_id => {
 column name => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 0,
 };
 
 column default_daily_usage_cap => {
     data_type => 'numeric(3,2)',
-    is_nullable => 0,
     default_value => 1.00,
 };
 
@@ -39,4 +37,3 @@ sub unlimited {
 }
 
 1;
-

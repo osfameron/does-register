@@ -5,19 +5,16 @@ use DoES::Register::Schema::Candy
 
 column member_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column sent_to_email => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 0,
 };
 
 column first_name => {
     data_type => 'varchar',
     size => 255,
-    is_nullable => 0,
 };
 
 column last_name => {
@@ -66,7 +63,6 @@ for my $col (qw/
 ) {
     column $col => {
         data_type => 'boolean',
-        nullable => 0,
         default => 0,
     };
 }

@@ -5,7 +5,6 @@ use DoES::Register::Schema::Candy
 
 unique_column member_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
  
 unique_column topup_id => {

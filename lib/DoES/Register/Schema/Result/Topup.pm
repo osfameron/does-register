@@ -5,23 +5,19 @@ use DoES::Register::Schema::Candy
 
 column member_id => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column topup_date => {
     data_type => 'datetime',
-    is_nullable => 0,
     set_on_create => 1,
 };
 
 column days => {
     data_type => 'int',
-    is_nullable => 0,
 };
 
 column cost => {
     data_type => 'numeric(5,2)',
-    is_nullable => 0,
 };
 
 column freeagent_invoice_id => {

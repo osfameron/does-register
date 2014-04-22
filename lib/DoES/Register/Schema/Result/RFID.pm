@@ -5,7 +5,6 @@ use DoES::Register::Schema::Candy
 
 column rfid => {
     data_type => 'int',
-    is_nullable => 0,
 };
  
 column member_id => {
