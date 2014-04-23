@@ -20,7 +20,6 @@ unique_column visit_id => {
 belongs_to member => 'DoES::Register::Schema::Result::Member' => 'member_id';
 belongs_to topup => 'DoES::Register::Schema::Result::Topup' => 'topup_id', { join_type => 'left' };
 belongs_to visit => 'DoES::Register::Schema::Result::Visit', 'visit_id', { join_type => 'left' };
-might_have cake  => 'DoES::Register::Schema::Result::Cake';
 
 subclass;
 1;
