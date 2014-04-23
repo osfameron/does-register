@@ -21,5 +21,10 @@ $db->deploy;
 
 if ($opt{'setup-fixtures'}) {
     say 'Setting up fixtures';
-    DoESTest->setup_fixtures($db) 
+    DoESTest->setup_fixtures($db);
+    say "You can run tests against this with:";
+    say sprintf 'DOES_TEST_DSN=%s prove t', $app->dsn;
 }
+
+say "DONE";
+
