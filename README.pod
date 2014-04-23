@@ -1,0 +1,138 @@
+=head1 DoES Register 
+
+A data model and application for managing a hackspace register.
+
+=head2 INSTALLATION
+
+    $ cd does-register
+
+    ### install the required packages (Debuntu)
+    $ conf/packages | xargs sudo apt-get install
+
+    ### set up a local lib, and install Perl modules
+    $ eval `bin/setenv`
+    $ cpanm --installdeps .
+
+    ### deploy a database with a few test fixtures
+    $ createdb doesregister
+    $ bin/deploy_db --setup-fixtures
+
+    ### run tests
+    $ prove t
+
+    ### or, if your DB is deployed cleanly, as above, save time with:
+    $ DOES_TEST_DSN=dbi:Pg:dbname=doesregister prove t
+
+    ### start the server
+    $ bin/runserver
+
+=head2 SOURCE LAYOUT MAP
+
+    /
+        cpanfile            list of Perl dependencies
+        does-register.psgi  webserver config (similar to Rack/WSGI)
+        conf/               not much in here yet, see lib/DoES/Register.pm
+        bin/                utility scripts
+        public/             HTML/CSS/Javascript
+        t/                  tests
+            lib/            test modules. DoESTest.pm contains overrides for test config
+
+        lib/                the Perl libraries
+            DoES/
+                Register.pm         container for config and various modules
+                Register/
+                    Handler.pm      Socket API logic
+                Schema/             Database Model
+                    Result/         The DB object types
+                    ResultSet/      ... and extra collection methods
+
+=head2 MAJOR COMPONENTS
+
+=over 4
+
+=item *
+
+L<Plack> - like Rack/WSGI, this provides interface to HTTP request/response
+
+=item *
+
+L<Moo> - modern OO framework (lighter weight version of L<Moose>).  The container
+module C<lib/DoES/Register.pm> uses this heavily to set up its configuration
+dependencies.
+
+=item *
+
+L<DBIx::Class> - mature and flexible ORM.  We're using L<DBIx::Class::Candy>
+for prettier syntax, and a number of other extensions. The layout for the
+model is:
+
+    lib/DoES/Register/
+        Schema.pm               basic config. Also some essential deployment fixtures
+        Schema/
+            Candy.pm            config for the L<DBIx::Class::Candy> helper
+            BaseObject.pm       common columns (created_date, updated_date)
+            Commentable.pm      common column (comment)
+            Result/             (as above)
+            ResultSet/
+
+=item *
+
+L<PocketIO> - a library for interacting with websockets.  As the name implies, this
+uses the socketio.js library.
+
+=back
+
+=head2 DB Schema
+
+The tables are as follows.  Much of the logic is currently implemented in the
+Member and Visit objects (and associated C<::ResultSet::> collection methods)
+
+=over 4
+
+=item *
+
+Member: represents a DoES user
+
+=item *
+
+MembershipType: distinguishes 'orga', 'perm', 'payg' etc.  May be marked as "unlimited"
+
+=item *
+
+Membership: a Member may have many of these, each mapping to a given MembershipType
+
+=item *
+
+Visit: a visit of a Member to the space.  This may result in days used (unless the user
+has an "unlimited" membership.
+
+=item *
+
+Topup: for payg users, a topup adds days to the account
+
+=item *
+
+Usage: this represents a typical daily usage of the space, e.g. 1.00 (a whole
+day) or 0.50 (half day), and the business rules attached.  We flag if a user
+stays too long (e.g. 8 hours on a half-day), too little (2 hours for a full day)
+and try to default to an appropriate usage after an appropriate cutoff time.
+
+=item *
+
+Cake: models a cake-day.  This is associated with a user, and may in addition be related to
+a specific visit or topup.
+
+=item *
+
+tbd:
+
+    RFID
+    FreeAgentContact
+    FreeAgentInvoice
+    Induction
+
+=back
+
+=cut
+
+
