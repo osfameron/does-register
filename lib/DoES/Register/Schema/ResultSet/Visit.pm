@@ -17,10 +17,14 @@ sub visits_on_day {
 
     $self->search_rs(
         { 
-            visit_date => $dtf->format_date($now),
+            'me.visit_date' => $dtf->format_date($now),
         },
         {
-            prefetch => [ 'cake', 'member', 'usage' ],
+            prefetch => [ 
+                'cake', 
+                'usage',
+                { 'member' => [ { 'memberships' => 'type' }, 'topups', 'visits' ] }, 
+            ],
             '+select' => [
                 \"CASE WHEN $COND THEN $TOTAL_TIME ELSE null END",
                 \"CASE WHEN $COND THEN $TOTAL_TIME ELSE $ELAPSED_TIME END",

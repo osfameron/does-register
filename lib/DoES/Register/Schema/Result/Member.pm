@@ -51,7 +51,7 @@ sub total_topups_till_date {
 
     return $self->topups->search(
         {
-            topup_date => { '<', $TOMORROW },
+            'me.topup_date' => { '<', $TOMORROW },
         },
         {
             distinct  => 1,
@@ -66,7 +66,7 @@ sub total_days_used_till_date {
 
     return $self->visits->search(
         {
-            visit_date => { '<', $TOMORROW },
+            'me.visit_date' => { '<', $TOMORROW },
         },
         {
             distinct  => 1,

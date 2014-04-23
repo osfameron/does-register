@@ -171,10 +171,7 @@ subtest 'members available to visit' => sub {
           {
             'out' => undef,
             'icon' => re('https?:.*'),
-            'types' => [
-                         'orga',
-                         'perm'
-                       ],
+            'types' => bag( 'orga', 'perm' ),
             'active' => 1,
             'name' => 'Alice',
             'flagged_hours' => 0,
