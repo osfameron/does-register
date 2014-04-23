@@ -155,14 +155,21 @@ subtest 'members available to visit' => sub {
     }
     is $member_rs->not_currently_visiting()->count, 0, 'No more members';
 
-    my $visits = $visit_rs->visits_on_day;
+    $member_d->topups->create({
+        topup_date => today,
+        days => 1,
+        cost => 8.0,
+    });
+
+    my $now = today->set( hour => 17, minute => 0 );
+
+    my $visits = $visit_rs->visits_on_day($now);
     is $visits->count, 4, '4 visits';
     my $visits_struct = [ map $_->to_struct, $visits->all ];
     cmp_deeply $visits_struct,
         [
           {
             'out' => undef,
-            'left' => 0,
             'icon' => re('https?:.*'),
             'types' => [
                          'orga',
@@ -172,11 +179,11 @@ subtest 'members available to visit' => sub {
             'name' => 'Alice',
             'flagged_hours' => 0,
             'in' => '09:00:00',
-            'used' => 0
+            'used' => '0.00',
+            'left' => '0.00',
           },
           {
             'out' => undef,
-            'left' => 0,
             'icon' => re('https?:.*'),
             'types' => [
                          'perm'
@@ -185,11 +192,11 @@ subtest 'members available to visit' => sub {
             'name' => 'Bob',
             'flagged_hours' => 0,
             'in' => '10:00:00',
-            'used' => 0
+            'used' => '0.00',
+            'left' => '0.00',
           },
           {
             'out' => undef,
-            'left' => 0,
             'icon' => 'https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon',
             'types' => [
                          'payg'
@@ -198,11 +205,11 @@ subtest 'members available to visit' => sub {
             'name' => 'Colin',
             'flagged_hours' => 0,
             'in' => '11:00:00',
-            'used' => 0
+            'used' => '1.00',
+            'left' => '-1.00',
           },
           {
             'out' => undef,
-            'left' => 0,
             'icon' => 'https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon',
             'types' => [
                          'payg'
@@ -211,7 +218,8 @@ subtest 'members available to visit' => sub {
             'name' => 'Deirdre',
             'flagged_hours' => 0,
             'in' => '12:00:00',
-            'used' => 0
+            'used' => '0.50',
+            'left' => '0.50', # -0.50 + 1.00
           }
         ], 'Visits structure ok' or diag Dumper($visits_struct);
 

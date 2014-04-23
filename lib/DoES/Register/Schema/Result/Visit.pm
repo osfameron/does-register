@@ -50,7 +50,8 @@ subclass;
 around new => sub {
     my ($orig, $class, $args) = @_;
     my $self = $class->$orig($args);
-    die "No time_in passed" unless $self->time_in; # bit odd, but constraint isn't checked till insertion
+    use Carp 'confess';
+    confess "No time_in passed" unless $self->time_in; # bit odd, but constraint isn't checked till insertion
     unless (defined $args->{days_used}) {
        $self->days_used( $self->get_initial_days_used );
     }
@@ -119,7 +120,7 @@ sub flagged_hours {
 }
 
 sub to_struct {
-    my ($self, $time_zone) = @_;
+    my ($self, $time_zone, $override_now) = @_;
     my $member = $self->member;
 
     $time_zone ||= 'Europe/London';
@@ -132,11 +133,11 @@ sub to_struct {
         active => ! $self->time_out,
         icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
         types => [ map $_->type->name, $member->memberships ],
-        left => 0,
-        used => 0,
         in => $time_in,
         out=> $time_out,
         flagged_hours => $self->flagged_hours,
+        used => $member->total_days_used_till_date($override_now),
+        left => $member->total_days_left_at_date($override_now),
     }
 }
 
