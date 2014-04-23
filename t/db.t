@@ -220,10 +220,43 @@ subtest 'members available to visit' => sub {
 };
 
 subtest 'Visits and topups' => sub {
-    can_ok $member_d, 'total_days_used_till_date', 'total_topups_till_date';
+    can_ok $member_d, qw(
+        total_days_used_till_date
+        total_topups_till_date
+        total_days_left_at_date
+        );
 
     is $member_d->total_topups_till_date, 0, 'No topups purchased yet';
     is $member_d->total_days_used_till_date, 0, 'No days used yet';
+
+    $db->txn_begin;
+
+    for my $i (1..5) {
+        my $day = today->subtract(days => $i);
+        $member_d->visits->create({
+            visit_date => $day,
+            time_in => $day->clone->set( hour => 9, minute => 0 ),
+        });
+        # member_d has a half-day
+        my $used = sprintf '%0.2f', 0.5 * $i;
+        is $member_d->total_days_used_till_date, $used, 'Correct number of half days used';
+        is $member_d->total_days_left_at_date, "-$used", 'Correct number of half days remaining';
+    }
+
+    $member_d->topups->create({
+        topup_date => today->subtract(days => 5),
+        days => 2,
+        cost => 16.0,
+    });
+    is $member_d->total_days_left_at_date, "-0.50", 'Half day over after topup';
+    $member_d->topups->create({
+        topup_date => today,
+        days => 1,
+        cost => 8.0,
+    });
+    is $member_d->total_days_left_at_date, "0.50", 'Half day left after topup';
+
+    $db->txn_rollback;
 };
 
 done_testing;

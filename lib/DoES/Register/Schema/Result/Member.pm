@@ -74,4 +74,12 @@ sub total_days_used_till_date {
     )->get_column('days_used')->sum // 0;
 }
 
+sub total_days_left_at_date {
+    my ($self, $override_now) = @_;
+
+    return sprintf '%0.2f',
+           $self->total_topups_till_date($override_now)
+         - $self->total_days_used_till_date($override_now);
+}
+
 1;

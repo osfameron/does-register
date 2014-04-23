@@ -50,6 +50,7 @@ subclass;
 around new => sub {
     my ($orig, $class, $args) = @_;
     my $self = $class->$orig($args);
+    die "No time_in passed" unless $self->time_in; # bit odd, but constraint isn't checked till insertion
     unless (defined $args->{days_used}) {
        $self->days_used( $self->get_initial_days_used );
     }
