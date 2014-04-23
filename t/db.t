@@ -209,11 +209,11 @@ subtest 'members available to visit' => sub {
                        ],
             'active' => 1,
             'name' => 'Deirdre',
-            'flagged_hours' => 1,
+            'flagged_hours' => 0,
             'in' => '12:00:00',
             'used' => 0
           }
-        ], 'Visits structure ok';
+        ], 'Visits structure ok' or diag Dumper($visits_struct);
 
     restore_time;
     $db->txn_rollback;
