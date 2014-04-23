@@ -219,4 +219,11 @@ subtest 'members available to visit' => sub {
     $db->txn_rollback;
 };
 
+subtest 'Visits and topups' => sub {
+    can_ok $member_d, 'total_days_used_till_date', 'total_topups_till_date';
+
+    is $member_d->total_topups_till_date, 0, 'No topups purchased yet';
+    is $member_d->total_days_used_till_date, 0, 'No days used yet';
+};
+
 done_testing;
