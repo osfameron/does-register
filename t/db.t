@@ -20,88 +20,99 @@ sub today {
     DateTime->today->set_time_zone($app->time_zone);
 }
 
+my $member_rs = $db->resultset('Member');
+my $visit_rs = $db->resultset('Visit');
+
+my %member;
 subtest 'sanity' => sub {
     is $db->resultset('MembershipType')->count, 8;
     is $db->resultset('Member')->count, 4;
     is $db->resultset('Membership')->count, 5;
-};
+    is $db->resultset('Visit')->count, 0;
+    is $db->resultset('Topup')->count, 0;
+    for my $name (qw/ Alice Bob Colin Deirdre /) {
+        ok $member{lc substr($name, 0, 1)} = $member_rs->find({ name => $name });
+    }
+} or die "Sanity checks failed, no point in carrying on.  Are you running a cleanly deployed test DB?";
 
-my $member_rs = $db->resultset('Member');
-my $visit_rs = $db->resultset('Visit');
-
-my $member_a = $member_rs->find({ name => 'Alice' });
 subtest 'alice (orga/perm)' => sub {
-    ok $member_a, 'Alice retrieved' and do {
-        ok $member_a->cake, 'Alice has had cake day';
 
-        # check that inheritance structure is OK
-        can_ok $member_a, qw/ id created_date updated_date comment /; 
+    $db->txn_begin;
+    my $past = today->subtract(days => 7);
+    my $visit_a = $member{a}->create_related( 
+        visits => {
+            time_in => $past->clone->set( hour => 9 ),
+            visit_date => $past,
+            days_used => 0,
+        });
+    $member{a}->create_related(
+        cake => {
+            comment => 'lemon drizzle',
+            visit => $visit_a,
+        });
+    ok $member{a}->cake, 'Alice has had cake day';
+    $db->txn_rollback;
 
-        check_times( $member_a, [
-            [ '09:30' => '0.00' ],
-            [ '12:30' => '0.00' ],
-            [ '18:30' => '0.00' ],
-        ]);
+    # check that inheritance structure is OK
+    can_ok $member{a}, qw/ id created_date updated_date comment /; 
 
-        check_visit_flagged( $member_a, 9 => 11, undef, 0.00, 0, '0 usage never flagged' );
-        check_visit_flagged( $member_a, 9 => 17, undef, 0.00, 0, '0 usage never flagged' );
-        check_visit_flagged( $member_a, 9 => undef, 23, 0.00, 0, '0 usage never flagged' );
-    };
+    check_times( $member{a}, [
+        [ '09:30' => '0.00' ],
+        [ '12:30' => '0.00' ],
+        [ '18:30' => '0.00' ],
+    ], 'Perm usage always 0');
+
+    check_visit_flagged( $member{a}, 9 => 11, undef, 0.00, 0, '0 usage never flagged' );
+    check_visit_flagged( $member{a}, 9 => 17, undef, 0.00, 0, '0 usage never flagged' );
+    check_visit_flagged( $member{a}, 9 => undef, 23, 0.00, 0, '0 usage never flagged' );
 };
 
-my $member_b = $member_rs->find({ name => 'Bob' });
 subtest 'bob' => sub {
-    ok $member_b, 'Bob retrieved' and do {
-        ok ! $member_b->cake, 'Bob has not had cake day';
+    ok ! $member{b}->cake, 'Bob has not had cake day';
 
-        check_visit_flagged( $member_b, 9 => 12, undef, 0.50, 0, 'Half day not flagged' );
-        check_visit_flagged( $member_b, 9 => undef, 11, 0.50, 0, 'Half day not yet clocked out not flagged' );
-        check_visit_flagged( $member_b, 9 => 17, undef, 0.50, 1, 'Overly long half day flagged' );
-        check_visit_flagged( $member_b, 9 => undef, 17, 0.50, 1, 'Unclocked-out half day flagged' );
-        check_visit_flagged( $member_b, 9 => 17, undef, 1.00, 0, 'Full day not flagged' );
-        check_visit_flagged( $member_b, 9 => undef, 16, 1.00, 0, 'Full day not yet clocked out not flagged' );
-        check_visit_flagged( $member_b, 9 => undef, 18, 1.00, 0, 'Full day never clocked out flagged' );
-        check_visit_flagged( $member_b, 9 => 11, undef, 1.00, 1, 'Overly short full day flagged' );
-    };
+    check_visit_flagged( $member{b}, 9 => 12, undef, 0.50, 0, 'Half day not flagged' );
+    check_visit_flagged( $member{b}, 9 => undef, 11, 0.50, 0, 'Half day not yet clocked out not flagged' );
+    check_visit_flagged( $member{b}, 9 => 17, undef, 0.50, 1, 'Overly long half day flagged' );
+    check_visit_flagged( $member{b}, 9 => undef, 17, 0.50, 1, 'Unclocked-out half day flagged' );
+    check_visit_flagged( $member{b}, 9 => 17, undef, 1.00, 0, 'Full day not flagged' );
+    check_visit_flagged( $member{b}, 9 => undef, 16, 1.00, 0, 'Full day not yet clocked out not flagged' );
+    check_visit_flagged( $member{b}, 9 => undef, 18, 1.00, 0, 'Full day never clocked out flagged' );
+    check_visit_flagged( $member{b}, 9 => 11, undef, 1.00, 1, 'Overly short full day flagged' );
 };
 
 subtest 'colin (payg)' => sub {
-    my $member_c = $member_rs->find({ name => 'Colin' });
-    ok $member_c, 'Colin retrieved' and do {
-        ok ! $member_c->cake, 'Colin has not had cake day';
+    ok ! $member{c}->cake, 'Colin has not had cake day';
 
-        check_times( $member_c, [
-            [ '09:30' => '1.00' ],
-            [ '12:30' => '0.50' ],
-            [ '18:30' => '0.25' ],
-        ]);
-    };
+    check_times( $member{c}, [
+        [ '09:30' => '1.00' ],
+        [ '12:30' => '0.50' ],
+        [ '18:30' => '0.25' ],
+    ], 'normal usage');
 };
 
-my $member_d = $member_rs->find({ name => 'Deirdre' });
 subtest 'deirdre (payg halfdays)' => sub {
-    ok $member_d, 'Deirdre retrieved' and do {
-        ok ! $member_d->cake, 'Colin has not had cake day';
+    ok ! $member{d}->cake, 'Deirdre has not had cake day';
 
-        check_times( $member_d, [
-            [ '09:30' => '0.50' ],
-            [ '12:30' => '0.50' ],
-            [ '18:30' => '0.25' ],
-        ]);
-    };
+    check_times( $member{d}, [
+        [ '09:30' => '0.50' ],
+        [ '12:30' => '0.50' ],
+        [ '18:30' => '0.25' ],
+    ], 'Capped at half day');
 };
 
 sub check_times {
-    my ($member, $times) = @_;
-    for (@$times) {
-        my ($time_in, $days_used) = @$_;
-        my ($hh,$mm) = split /:/, $time_in;
+    my ($member, $times, $desc) = @_;
+    subtest $desc => sub {
+        for (@$times) {
+            my ($time_in, $days_used) = @$_;
+            my ($hh,$mm) = split /:/, $time_in;
 
-        my $visit = $member->visits->new({
-            visit_date => today,
-            time_in => today->set( hour => $hh, minute => $mm ),
-        });
-        is $visit->days_used, $days_used, "In $time_in, days_used $days_used";
+            my $visit = $member->visits->new({
+                visit_date => today,
+                time_in => today->set( hour => $hh, minute => $mm ),
+            });
+            is $visit->days_used, $days_used, "In $time_in, days_used $days_used";
+        }
     }
 }
 
@@ -155,7 +166,7 @@ subtest 'members available to visit' => sub {
     }
     is $member_rs->not_currently_visiting()->count, 0, 'No more members';
 
-    $member_d->topups->create({
+    $member{d}->topups->create({
         topup_date => today,
         days => 1,
         cost => 8.0,
@@ -225,41 +236,41 @@ subtest 'members available to visit' => sub {
 };
 
 subtest 'Visits and topups' => sub {
-    can_ok $member_d, qw(
+    can_ok $member{d}, qw(
         total_days_used_till_date
         total_topups_till_date
         total_days_left_at_date
         );
 
-    is $member_d->total_topups_till_date, 0, 'No topups purchased yet';
-    is $member_d->total_days_used_till_date, 0, 'No days used yet';
+    is $member{d}->total_topups_till_date, 0, 'No topups purchased yet';
+    is $member{d}->total_days_used_till_date, 0, 'No days used yet';
 
     $db->txn_begin;
 
     for my $i (1..5) {
         my $day = today->subtract(days => $i);
-        $member_d->visits->create({
+        $member{d}->visits->create({
             visit_date => $day,
             time_in => $day->clone->set( hour => 9, minute => 0 ),
         });
-        # member_d has a half-day
+        # member{d} has a half-day
         my $used = sprintf '%0.2f', 0.5 * $i;
-        is $member_d->total_days_used_till_date, $used, 'Correct number of half days used';
-        is $member_d->total_days_left_at_date, "-$used", 'Correct number of half days remaining';
+        is $member{d}->total_days_used_till_date, $used, 'Correct number of half days used';
+        is $member{d}->total_days_left_at_date, "-$used", 'Correct number of half days remaining';
     }
 
-    $member_d->topups->create({
+    $member{d}->topups->create({
         topup_date => today->subtract(days => 5),
         days => 2,
         cost => 16.0,
     });
-    is $member_d->total_days_left_at_date, "-0.50", 'Half day over after topup';
-    $member_d->topups->create({
+    is $member{d}->total_days_left_at_date, "-0.50", 'Half day over after topup';
+    $member{d}->topups->create({
         topup_date => today,
         days => 1,
         cost => 8.0,
     });
-    is $member_d->total_days_left_at_date, "0.50", 'Half day left after topup';
+    is $member{d}->total_days_left_at_date, "0.50", 'Half day left after topup';
 
     $db->txn_rollback;
 };

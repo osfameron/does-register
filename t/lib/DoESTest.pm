@@ -63,17 +63,6 @@ sub setup_fixtures {
             { type => $types{perm}, start_date => $past },
         ],
     });
-    my $visit_a = $member_a->create_related( 
-        visits => {
-            time_in => $past->clone->set( hour => 9 ),
-            visit_date => $past,
-            days_used => 0,
-        });
-    $member_a->create_related(
-        cake => {
-            comment => 'lemon drizzle',
-            visit => $visit_a,
-        });
 
     my $member_b = $member_rs->create({
         name => 'Bob',
