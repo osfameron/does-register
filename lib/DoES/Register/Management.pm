@@ -40,7 +40,9 @@ has test_app => (
 );
 
 sub execute {
-    warn "No default behaviour TODO";
+    my $self = shift;
+    unshift @ARGV, '--help';
+    $self->new_with_cmd->execute;
 }
 
 1;
