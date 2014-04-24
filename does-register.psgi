@@ -6,14 +6,14 @@ use Plack::App::File;
 use Plack::Builder;
 use Plack::Middleware::Static;
 use Plack::Response;
+use Dir::Self;
 
 use Path::Tiny 'path';
 
 use lib 'lib';
 use DoES::Register;
 
-use FindBin;
-my $root = path( $FindBin::Bin );
+my $root = path( __DIR__ );
 
 sub mount_file {
     mount $_[0] => 

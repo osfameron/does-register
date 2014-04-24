@@ -1,8 +1,11 @@
 #!/usr/bin/env perl
 
-use FindBin;
-use lib "$FindBin::Bin/../lib";
-use lib "$FindBin::Bin/../t/lib";
+use strict; use warnings;
+
+use Dir::Self;
+BEGIN { chdir __DIR__ . '/..' }
+use lib 'lib';
+use lib 't/lib';
 
 use DoES::Register::Management;
 DoES::Register::Management->new_with_cmd;

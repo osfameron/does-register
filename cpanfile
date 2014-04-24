@@ -3,6 +3,7 @@ requires 'Plack';
 requires 'Plack::Middleware::Static';
 requires 'PocketIO::Client::IO';
 requires 'Path::Tiny';
+requires 'Dir::Self';
 
 requires 'DBD::Pg';
 requires 'DBIx::Class';
