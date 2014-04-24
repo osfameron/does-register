@@ -64,7 +64,7 @@ sub total_days_used_till_date {
 
     my $TOMORROW = $self->tomorrow($override_now);
 
-    return $self->visits->search(
+    my $total = $self->visits->search(
         {
             'me.visit_date' => { '<', $TOMORROW },
         },
@@ -72,10 +72,14 @@ sub total_days_used_till_date {
             distinct  => 1,
         }
     )->get_column('days_used')->sum // 0;
+
+    $total;
 }
 
 sub total_days_left_at_date {
     my ($self, $override_now) = @_;
+
+    # as an optimization, this call is reimplemented in ::Visit->to_struct
 
     return sprintf '%0.2f',
            $self->total_topups_till_date($override_now)

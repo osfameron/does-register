@@ -128,6 +128,10 @@ sub to_struct {
     my $time_in = $self->time_in->set_time_zone($time_zone)->time;
     my $time_out = $self->time_out ? $self->time_out->set_time_zone($time_zone)->time : undef;
 
+    my $used   = $member->total_days_used_till_date($override_now);
+    my $topups = $member->total_topups_till_date($override_now);
+    my $left   = sprintf '%0.2f', $topups - $used;
+
     return {
         name => $member->name,
         active => ! $self->time_out,
@@ -136,8 +140,8 @@ sub to_struct {
         in => $time_in,
         out=> $time_out,
         flagged_hours => $self->flagged_hours,
-        used => $member->total_days_used_till_date($override_now),
-        left => $member->total_days_left_at_date($override_now),
+        used => $used,
+        left => $left,
     }
 }
 

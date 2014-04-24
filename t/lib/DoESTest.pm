@@ -5,6 +5,7 @@ extends 'DoES::Register';
 use Test::PostgreSQL;
 use FindBin;
 use DateTime;
+use DoESTest::Profiler;
 
 has '+db' => (
     default => sub {
@@ -17,6 +18,24 @@ has '+db' => (
         return $db;
     }
 );
+
+has profiler => (
+    is => 'rw',
+    clearer => 1,
+    builder => sub { DoESTest::Profiler->new },
+);
+
+sub profile {
+    my ($self, $state) = @_;
+    $self->clear_profiler;
+    my $profiler = $self->_build_profiler;
+    $self->profiler($profiler);
+
+    my $db = $self->db;
+    $db->storage->debugobj($profiler) if $state;
+    $db->storage->debug($state);
+}
+
 
 has app_dsn => (
     is => 'lazy',

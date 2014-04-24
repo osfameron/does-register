@@ -180,9 +180,19 @@ subtest 'members available to visit' => sub {
 
     my $now = today->set( hour => 17, minute => 0 );
 
+    $app->profile(1);
+
     my $visits = $visit_rs->visits_on_day($now);
     is $visits->count, 4, '4 visits';
     my $visits_struct = [ map $_->to_struct, $visits->all ];
+
+    my $expected_count =
+            1 +     # count of visits (aggregate calls aren't prefetchable)
+            1 +     # main call
+         (4*2);     # (users * topups + visits, again aggregate calls)
+    is $app->profiler->call_count, $expected_count, 'Small number of calls, due to prefetching'
+        or diag Dumper($app->profiler->all_calls);
+
     cmp_deeply $visits_struct,
         [
           {

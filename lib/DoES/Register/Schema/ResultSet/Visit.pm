@@ -23,7 +23,7 @@ sub visits_on_day {
             prefetch => [ 
                 'cake', 
                 'usage',
-                { 'member' => [ { 'memberships' => 'type' }, 'topups', 'visits' ] }, 
+                { 'member' => [ { 'memberships' => 'type' } ] }, 
             ],
             '+select' => [
                 \"CASE WHEN $COND THEN $TOTAL_TIME ELSE null END",
