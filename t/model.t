@@ -25,13 +25,19 @@ my $visit_rs = $db->resultset('Visit');
 
 my %member;
 subtest 'sanity' => sub {
-    is $db->resultset('MembershipType')->count, 8;
-    is $db->resultset('Member')->count, 4;
-    is $db->resultset('Membership')->count, 5;
-    is $db->resultset('Visit')->count, 0;
-    is $db->resultset('Topup')->count, 0;
     for my $name (qw/ Alice Bob Colin Deirdre /) {
-        ok $member{lc substr($name, 0, 1)} = $member_rs->find({ name => $name });
+        ok $member{lc substr($name, 0, 1)} = $member_rs->find({ name => $name }),
+            "Retrieved user $name";
+    }
+    for (
+        [ 'MembershipType', 8 ],
+        [ 'Member', 4 ],
+        [ 'Membership', 5 ],
+        [ 'Visit', 0 ],
+        [ 'Topup', 0 ],
+    ) {
+        my ($rs, $count) = @$_;
+        is $db->resultset($rs)->count, $count, "$rs count is $count";
     }
 } or die "Sanity checks failed, no point in carrying on.  Are you running a cleanly deployed test DB?";
 
