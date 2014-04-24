@@ -11,6 +11,7 @@ A data model and application for managing a hackspace register.
 
     ### set up a local lib, and install Perl modules
     $ eval `bin/setenv`
+    $ curl -L http://cpanmin.us | perl - App::cpanminus
     $ cpanm --installdeps .
 
     ### deploy a database with a few test fixtures
@@ -79,7 +80,7 @@ model is:
 =item *
 
 L<PocketIO> - a library for interacting with websockets.  As the name implies, this
-uses the socketio.js library.
+uses the socket.io.js library L<http://socket.io/>.
 
 =back
 
