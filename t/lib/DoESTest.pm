@@ -18,6 +18,13 @@ has '+db' => (
     }
 );
 
+has app_dsn => (
+    is => 'lazy',
+    default => sub {
+        my $self = shift;
+        $self->SUPER::dsn;
+    },
+);
 has dsn => (
     is => 'lazy',
     # isa => 'Str',

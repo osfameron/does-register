@@ -21,3 +21,7 @@ requires 'App::ForkProve';
 requires 'Test::DBIx::Class';
 
 requires 'Moo';
+
+requires 'MooX::Cmd';
+requires 'MooX::Options';
+requires 'Module::Load';

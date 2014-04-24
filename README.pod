@@ -18,10 +18,11 @@ A data model and application for managing a hackspace register.
     $ bin/deploy_db --setup-fixtures
 
     ### run tests
-    $ prove t
+    $ bin/manage test              # all tests
+    $ bin/manage test t/model.t    # specific test
 
     ### or, if your DB is deployed cleanly, as above, save time with:
-    $ DOES_TEST_DSN=dbi:Pg:dbname=doesregister prove t
+    $ bin/manage test --use-main-db
 
     ### start the server
     $ bin/runserver
