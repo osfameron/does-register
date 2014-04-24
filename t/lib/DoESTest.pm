@@ -3,7 +3,6 @@ package DoESTest;
 use Moo;
 extends 'DoES::Register';
 use Test::PostgreSQL;
-use FindBin;
 use DateTime;
 use DoESTest::Profiler;
 

@@ -6,10 +6,6 @@ use Test::Deep;
 use Test::MockTime ':all';
 use Data::Dumper;
 
-use FindBin;
-use lib "$FindBin::Bin/../lib";
-use lib "$FindBin::Bin/lib";
-
 use DateTime;
 use DoESTest;
 
