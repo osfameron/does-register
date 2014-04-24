@@ -7,7 +7,7 @@ A data model and application for managing a hackspace register.
     $ cd does-register
 
     ### install the required packages (Debuntu)
-    $ conf/packages | xargs sudo apt-get install
+    $ cat conf/packages | xargs sudo apt-get install
 
     ### set up a local lib, and install Perl modules
     $ eval `bin/setenv`
@@ -15,7 +15,7 @@ A data model and application for managing a hackspace register.
 
     ### deploy a database with a few test fixtures
     $ createdb doesregister
-    $ bin/deploy_db --setup-fixtures
+    $ bin/manage deploydb --setup-fixtures
 
     ### run tests
     $ bin/manage test              # all tests
@@ -25,7 +25,7 @@ A data model and application for managing a hackspace register.
     $ bin/manage test --use-main-db
 
     ### start the server
-    $ bin/runserver
+    $ bin/manage runserver
 
 =head2 SOURCE LAYOUT MAP
 
