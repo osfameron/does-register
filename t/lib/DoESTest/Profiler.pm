@@ -1,6 +1,7 @@
 package DoESTest::Profiler;
 use Moo;
 use MooX::HandlesVia;
+use Time::HiRes;
 
 extends 'DBIx::Class::Storage::Statistics';
 
@@ -19,6 +20,8 @@ has calls => (
     },
 );
 
+sub print { } # silence logging
+
 sub query_start {
     my $self = shift();
     my $sql = shift();
@@ -33,7 +36,6 @@ sub query_end {
     my @params = @_;
  
     my $elapsed = time() - $self->start;
-    # TODO, store this info somewhere useful in this object
 
     $self->add_call({
         sql => $sql,
