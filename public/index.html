@@ -7,12 +7,12 @@
 
     <script> <!-- angular controller -->
 
+        function VisitCtrl($scope) {
+            $scope.visits = [];
+        }
+
         function MemberCtrl($scope) {
             $scope.members = [];
-
-            $scope.refreshMembers = function (members) {
-                $scope.members = members;
-            };
         }
 
     </script>
@@ -20,17 +20,22 @@
     <script> <!-- PocketIO -->
         $(function () {
             var socket = io.connect( );
-            var $scope = $('table#members').scope();
 
             socket.on('connect', function () {
                 console.log('CONNECTED');
             });
          
-            socket.on('members', function (list) {
-                $scope.$apply( function () { $scope.refreshMembers( list ) });
+            socket.on('visits', function (visits) {
+                var $scope = $('table#visits').scope();
+                $scope.$apply( function () { $scope.visits = visits });
             });
 
-            socket.emit('hello'); // Tell server we are ready for first members list
+            socket.on('members', function (members) {
+                var $scope = $('#members').scope();
+                $scope.$apply( function () { $scope.members = members });
+            });
+
+            socket.emit('hello'); // Tell server we are ready for first visits list
         });
     </script>
 </head>
@@ -38,7 +43,7 @@
 
   <div class="content">
 
-    <table id="members" ng-controller="MemberCtrl">
+    <table id="visits" ng-controller="VisitCtrl">
         <thead>
             <tr>
                 <th colspan=3> User </th>
@@ -58,18 +63,25 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="member in members" class="{{ member.active ? 'active' : 'inactive' }}">
-                <td> <img src="{{ member.icon }}" alt="Icon for {{ member.name }}">
-                <td> {{ member.name }} </td>
-                <td> {{ member.types }} </td>
-                <td class="num"> {{ member.left }} </td>
-                <td class="num"> {{ member.used }} </td>
-                <td class="time"> {{ member.in }} </td>
+            <tr ng-repeat="visit in visits" class="{{ visit.active ? 'active' : 'inactive' }}">
+                <td> <img src="{{ visit.icon }}" alt="Icon for {{ visit.name }}">
+                <td> {{ visit.name }} </td>
+                <td> {{ visit.types }} </td>
+                <td class="num"> {{ visit.left }} </td>
+                <td class="num"> {{ visit.used }} </td>
+                <td class="time"> {{ visit.in }} </td>
                 <td class="time"> &rarr; </td>
                 <td> &nbsp; </td>
             </tr>
         </tbody>
     </table>
+  </div>
+  <div>
+    <ul id="members" ng-controller="MemberCtrl">
+        <li ng-repeat="member in members">
+            {{ member.name }}
+        </li>
+    </ul>
   </div>
 </body>  
 </html>

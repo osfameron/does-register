@@ -16,15 +16,30 @@ sub run {
         });
 
         $self->on( hello => sub {
-                my ($self, $fun) = @_;
+            my ($self) = @_;
+            $handler->emit_visits($self);
+            $handler->emit_members($self);
+        });
 
-                my @visits = map $_->to_struct,
-                    $handler->db->resultset('Visit')->visits_on_day->all;
-
-                $self->emit( members => \@visits );
-            }
-        );
     }
+}
+
+sub emit_visits {
+    my ($self, $socket) = @_;
+
+    my @visits = map $_->to_struct,
+        $self->db->resultset('Visit')->visits_on_day->all;
+
+    $socket->emit( visits => \@visits );
+}
+
+sub emit_members {
+    my ($self, $socket) = @_;
+
+    my @members = map +{ $_->get_columns },
+        $self->db->resultset('Member')->not_currently_visiting->all;
+
+    $socket->emit( members => \@members );
 }
 
 1;
