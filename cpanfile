@@ -13,9 +13,10 @@ requires 'DBIx::Class::Helper::Row::SubClass';
 requires 'Test::PostgreSQL';
 requires 'DBIx::Class::InflateColumn::DateTime';
 requires 'DBIx::Class::TimeStamp';
-requires 'Test::PostgreSQL';
 
 requires 'Test::Most';
+requires 'Test::PostgreSQL';
+requires 'Test::Exception';
 requires 'Test::Pretty';
 requires 'Test::MockTime';
 requires 'App::ForkProve';
