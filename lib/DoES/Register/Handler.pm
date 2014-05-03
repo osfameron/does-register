@@ -24,7 +24,7 @@ sub run {
             my ($self, $id) = @_;
             my $member = $handler->db->resultset('Member')->find($id);
             $handler->db->resultset('Visit')->visit_now( $member );
-            $handler->emit_refresh($self);
+            $handler->emit_refresh($self->sockets);
         });
 
     }
