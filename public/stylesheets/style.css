@@ -3,55 +3,54 @@
     width: 1024px;
     margin: 0 auto; } }
 
-table {
+table#visits {
   width: 100%;
   /* border-collapse: collapse; // border-collapse doesn't play nicely with rounded corners -- */
   border-spacing: 0; }
-  table thead tr:first-child th:first-child {
+  table#visits thead tr:first-child th:first-child {
     -moz-border-radius-topleft: 10px;
     -webkit-border-top-left-radius: 10px;
     border-top-left-radius: 10px; }
-  table thead tr:first-child th:last-child {
+  table#visits thead tr:first-child th:last-child {
     -moz-border-radius-topright: 10px;
     -webkit-border-top-right-radius: 10px;
     border-top-right-radius: 10px; }
-  table tr:last-child td:first-child {
+  table#visits tr:last-child td:first-child {
     -moz-border-radius-bottomleft: 10px;
     -webkit-border-bottom-left-radius: 10px;
     border-bottom-left-radius: 10px; }
-  table tr:last-child td:last-child {
+  table#visits tr:last-child td:last-child {
     -moz-border-radius-bottomright: 10px;
     -webkit-border-bottom-right-radius: 10px;
     border-bottom-right-radius: 10px; }
-  table td img {
+  table#visits td img {
     width: 48px;
     height: 48px; }
-  table th {
+  table#visits th {
     background: #2ca25f;
     padding: 0.25em; }
-  table td {
+  table#visits td {
     border: solid 1px #99d869; }
-  table tr.inactive td {
+  table#visits tr.inactive td {
     opacity: 0.4;
     filter: alpha(opacity=40); }
-  table td {
+  table#visits td {
     background: #e5f5f9;
     padding: 0.25em; }
-    table td:first-child {
+    table#visits td:first-child {
       /* .image? */
       width: 50px; }
-    table td.unpadded {
+    table#visits td.unpadded {
       padding: 0; }
-    table td.overdue {
+    table#visits td.overdue {
       background: #f03b20; }
-    table td.num {
+    table#visits td.num {
       text-align: right;
       width: 3em; }
-    table td.time {
+    table#visits td.time {
       text-align: center;
       width: 5em; }
-
-select, button {
-  border-radius: 0.25em;
-  width: 100%;
-  height: 100%; }
+  table#visits select, table#visits button {
+    border-radius: 0.25em;
+    width: 100%;
+    height: 100%; }

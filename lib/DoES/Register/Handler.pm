@@ -17,11 +17,23 @@ sub run {
 
         $self->on( hello => sub {
             my ($self) = @_;
-            $handler->emit_visits($self);
-            $handler->emit_members($self);
+            $handler->emit_refresh($self);
+        });
+
+        $self->on( 'member_visit' => sub {
+            my ($self, $id) = @_;
+            my $member = $handler->db->resultset('Member')->find($id);
+            $handler->db->resultset('Visit')->visit_now( $member );
+            $handler->emit_refresh($self);
         });
 
     }
+}
+
+sub emit_refresh {
+    my ($self, $socket) = @_;
+    $self->emit_visits($socket);
+    $self->emit_members($socket);
 }
 
 sub emit_visits {
