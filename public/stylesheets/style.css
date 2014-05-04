@@ -59,5 +59,10 @@ table#visits {
   font-size: 2em; }
   #add_member .plus {
     background-color: #aaffaa; }
-  #add_member input {
-    font-size: 1em; }
+
+div.member_widget {
+  display: inline-block;
+  height: 2rem;
+  font-size: 2rem; }
+  div.member_widget input, div.member_widget button {
+    height: 100%; }

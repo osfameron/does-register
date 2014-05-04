@@ -38,14 +38,18 @@
                         m.label = m.name;
                     });
                     input = $('<input type="text" name="member_name">');
-                    input.insertAfter(position);
+                    button = $('<button name="create_new"> Create </button>');
+                    button.click(function () { alert("TODO") });
+                    div = $('<div class="member_widget">');
+                    div.append(input, button);
                     input.autocomplete({ 
                         source: members,
                         select: function (event, ui) {
                             callback(socket, ui.item);
-                            input.remove();
+                            div.remove();
                         }
                     });
+                    div.insertAfter(position);
                     input.focus();
                 });
             };

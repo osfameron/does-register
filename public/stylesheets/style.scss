@@ -71,8 +71,13 @@ table#visits {
     .plus {
         background-color: #aaffaa;
     }
-    input {
-        font-size: 1em;
-    }
 }
 
+div.member_widget {
+    display: inline-block;
+    height: 2rem;
+    font-size: 2rem;
+    input, button {
+        height: 100%;
+    }
+}
