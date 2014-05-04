@@ -103,10 +103,10 @@
                         <li ng-repeat="type in visit.types">{{ type }}</li>
                     </ul>
                 </td>
-                <td class="num"> {{ visit.left }} </td>
+                <td class="num {{ visit.left < 0 ? 'overdue' : '' }}"> {{ visit.left }} </td>
                 <td class="num"> {{ visit.used }} </td>
                 <td class="time"> {{ visit.in }} </td>
-                <td class="time"> &rarr; </td>
+                <td class="time {{ visit.flagged_hours ? 'overdue' : '' }}"> &rarr; </td>
                 <td> &nbsp; </td>
             </tr>
         </tbody>
