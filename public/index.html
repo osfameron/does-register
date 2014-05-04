@@ -37,11 +37,13 @@
                     $.each(members, function (i,m) {
                         m.label = m.name;
                     });
-                    input = $('<input type="text" name="member_name">');
-                    button = $('<button name="create_new"> Create </button>');
-                    button.click(function () { alert("TODO") });
                     div = $('<div class="member_widget">');
-                    div.append(input, button);
+                    input = $('<input type="text" name="member_name">');
+                    create = $('<button name="create_new"> Create </button>')
+                        .click(function () { alert("TODO") });
+                    cancel = $('<button name="create_new"> Cancel </button>')
+                        .click(function () { div.remove() });
+                    div.append(input, create, cancel);
                     input.autocomplete({ 
                         source: members,
                         select: function (event, ui) {
