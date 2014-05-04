@@ -27,13 +27,21 @@ sub run {
             $handler->emit_refresh($self->sockets);
         });
 
+        $self->on( 'get_members' => sub {
+            my ($self, $cb) = @_;
+
+            my @members = map +{ $_->get_columns },
+                $handler->db->resultset('Member')->not_currently_visiting->all;
+
+            $cb->(\@members);
+        });
+
     }
 }
 
 sub emit_refresh {
     my ($self, $socket) = @_;
     $self->emit_visits($socket);
-    $self->emit_members($socket);
 }
 
 sub emit_visits {
@@ -43,15 +51,6 @@ sub emit_visits {
         $self->db->resultset('Visit')->visits_on_day->all;
 
     $socket->emit( visits => \@visits );
-}
-
-sub emit_members {
-    my ($self, $socket) = @_;
-
-    my @members = map +{ $_->get_columns },
-        $self->db->resultset('Member')->not_currently_visiting->all;
-
-    $socket->emit( members => \@members );
 }
 
 1;

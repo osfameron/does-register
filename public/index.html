@@ -7,7 +7,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.min.js"></script>
 
-    <script> <!-- angular controller -->
+    <script> <!-- Angular controllers -->
 
         function VisitCtrl($scope) {
             $scope.visits = [];
@@ -28,24 +28,37 @@
                 $scope.$apply( function () { $scope.visits = visits });
             });
 
-            socket.on('members', function (members) {
-                $.each(members, function (i,m) {
-                    m.label = m.name;
-                });
-                $('#add_member').autocomplete('option', { 
-                    source: members,
-                });
-            });
-
             socket.emit('hello'); // Tell server we are ready for first visits list
 
-            <!-- JQuery autocomplete -->
-            $('#add_member').autocomplete({ 
-                source: [],
-                select: function (event, ui) {
-                    socket.emit('member_visit', ui.item.id);
+            <!-- JQuery -->
+
+            function member_search_create (socket, position, callback) {
+                socket.emit('get_members', function (members) {
+                    $.each(members, function (i,m) {
+                        m.label = m.name;
+                    });
+                    input = $('<input type="text" name="member_name">');
+                    input.insertAfter(position);
+                    input.autocomplete({ 
+                        source: members,
+                        select: function (event, ui) {
+                            callback(socket, ui.item);
+                            input.remove();
+                        }
+                    });
+                    input.focus();
+                });
+            };
+
+            $('#add_member .plus').click( function () {
+                if ( $('#add_member input').length ) {
+                    $('#add_member input').focus();
+                    return;
                 }
-            })
+                member_search_create(socket, $(this), function (socket, item) {
+                    socket.emit('member_visit', item.id);
+                });
+            });
         });
     </script>
 
@@ -86,9 +99,8 @@
             </tr>
         </tbody>
     </table>
-    <div>
-        <label for="add_member"> Add a member </label>
-        <input type="text" id="add_member">
+    <div id="add_member">
+        <span class="plus"> + </span>
     </div>
   </div>
 </body>  
