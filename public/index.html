@@ -83,8 +83,8 @@
             </tr>
             <tr>
                 <th> &nbsp; </th> <!-- gravatar -->
-                <th> Name </th> <!-- clickable -->
-                <th> Type </th> <!-- Org,Perm,Tech,Ws,Fr,Fwb,Hd -->
+                <th> Name </th>
+                <th> &nbsp; </th> <!-- type -->
                 <th> left </th> <!-- number, and + to add more -->
                 <th> used </th> <!-- select -->
                 <th> in </th> <!-- hh:mm -->
@@ -95,8 +95,14 @@
         <tbody>
             <tr ng-repeat="visit in visits" class="{{ visit.active ? 'active' : 'inactive' }}">
                 <td> <img src="{{ visit.icon }}" alt="Icon for {{ visit.name }}">
-                <td> {{ visit.name }} </td>
-                <td> {{ visit.types }} </td>
+                <td class="visitor_name"> 
+                    {{ visit.name }} 
+                </td>
+                <td class="membership_types">
+                    <ul>
+                        <li ng-repeat="type in visit.types">{{ type }}</li>
+                    </ul>
+                </td>
                 <td class="num"> {{ visit.left }} </td>
                 <td class="num"> {{ visit.used }} </td>
                 <td class="time"> {{ visit.in }} </td>
