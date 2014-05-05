@@ -13,7 +13,8 @@ use Path::Tiny 'path';
 use lib 'lib';
 use DoES::Register;
 
-my $root = path( __DIR__ );
+my $app = DoES::Register->new;
+my $root = $app->root;
 
 sub mount_file {
     mount $_[0] => 
@@ -21,8 +22,6 @@ sub mount_file {
             file => $root->child($_[1]) 
         )->to_app;
 };
-
-my $app = DoES::Register->new;
 
 builder {
     mount_file '/socket.io/socket.io.js' 
