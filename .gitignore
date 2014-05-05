@@ -1,3 +1,4 @@
 local/
 *.swp
+twitter_*_credentials.json
 

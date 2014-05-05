@@ -28,3 +28,5 @@ requires 'MooX::HandlesVia';
 requires 'MooX::Cmd';
 requires 'MooX::Options';
 requires 'Module::Load';
+
+requires 'Net::Twitter';

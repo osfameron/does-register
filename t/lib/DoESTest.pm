@@ -18,6 +18,10 @@ has '+db' => (
     }
 );
 
+has '+config_root' => (
+    default => sub { shift->root->child('t/conf') },
+);
+
 has profiler => (
     is => 'rw',
     clearer => 1,

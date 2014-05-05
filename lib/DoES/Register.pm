@@ -3,6 +3,19 @@ package DoES::Register;
 use Moo;
 use DoES::Register::Schema;
 use DoES::Register::Handler;
+use DoES::Register::Twitter;
+use Path::Tiny 'path';
+use Dir::Self;
+
+has root => (
+    is => 'lazy',
+    default => sub { path(__DIR__)->parent(2) },
+);
+
+has config_root => (
+    is => 'lazy',
+    default => sub { $_[0]->root->child('conf') },
+);
 
 has dsn => (
     is => 'lazy',
@@ -37,6 +50,14 @@ has pocket_io => (
 has time_zone => (
     is => 'ro',
     default => 'Europe/London',
+);
+
+has twitter => (
+    is => 'lazy',
+    default => sub {
+        my $self = shift;
+        return DoES::Register::Twitter->new( config_root => $self->config_root ),
+    },
 );
 
 sub now {
