@@ -133,6 +133,8 @@ sub to_struct {
     my $left   = sprintf '%0.2f', $topups - $used;
 
     return {
+        visit_id => $self->id,
+        member_id => $member->id,
         name => $member->name,
         active => ! $self->time_out,
         icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
@@ -140,7 +142,8 @@ sub to_struct {
         in => $time_in,
         out=> $time_out,
         flagged_hours => $self->flagged_hours,
-        used => $used,
+        days_used => $self->days_used,
+        total_used => $used,
         left => $left,
     }
 }

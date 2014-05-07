@@ -41,7 +41,10 @@ has pocket_io => (
     default => sub {
         my $self = shift;
         return PocketIO->new(
-            instance => DoES::Register::Handler->new( db => $self->db ),
+            instance => DoES::Register::Handler->new(
+                db => $self->db,
+                app => $self,
+            ),
             method => 'run',
         );
     },

@@ -6,6 +6,10 @@ has db => (
     is => 'ro',
 );
 
+has app => (
+    is => 'ro',
+);
+
 sub run {
     my $handler = shift;
     return sub {
@@ -24,6 +28,14 @@ sub run {
             my ($self, $id) = @_;
             my $member = $handler->db->resultset('Member')->find($id);
             $handler->db->resultset('Visit')->visit_now( $member );
+            $handler->emit_refresh($self->sockets);
+        });
+
+        $self->on( 'end_visit' => sub {
+            my ($self, $id) = @_;
+            my $visit = $handler->db->resultset('Visit')->find($id);
+            # TODO, sanity check that visit is today
+            $visit->update({ time_out => $handler->app->now });
             $handler->emit_refresh($self->sockets);
         });
 
