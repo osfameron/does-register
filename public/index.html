@@ -113,7 +113,10 @@
                 <td class="num {{ visit.left < 0 ? 'overdue' : '' }}"> {{ visit.left }} </td>
                 <td class="num {{ visit.flagged_hours ? 'overdue' : '' }}"> {{ visit.days_used }} </td>
                 <td class="time"> {{ visit.in }} </td>
-                <td ng-if="visit.out" class="time"> {{ visit.out }} </td>
+                <td ng-if="visit.out" class="time"> 
+                    {{ visit.out }}  
+                    <br />({{ visit.used_today }})
+                </td>
                 <td ng-if="! visit.out" class="time">
                     <img ng-click="end_visit(visit)" src="/images/icon_out.png" alt="out" />
                 </td>

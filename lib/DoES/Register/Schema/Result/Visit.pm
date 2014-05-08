@@ -125,8 +125,9 @@ sub to_struct {
 
     $time_zone ||= 'Europe/London';
 
-    my $time_in = $self->time_in->set_time_zone($time_zone)->time;
-    my $time_out = $self->time_out ? $self->time_out->set_time_zone($time_zone)->time : undef;
+    my $time_in = $self->time_in->set_time_zone($time_zone);
+    my $time_out = $self->time_out ? $self->time_out->set_time_zone($time_zone) : undef;
+    my $used_today = $self->time_out ? ($time_out - $time_in) : undef;
 
     my $used   = $member->total_days_used_till_date($override_now);
     my $topups = $member->total_topups_till_date($override_now);
@@ -139,8 +140,9 @@ sub to_struct {
         active => ! $self->time_out,
         icon => "https://secure.gravatar.com/avatar/6cc00f9bf5a38125e2514ae33e170e96?s=130&d=identicon",
         types => [ map $_->type->name, $member->memberships ],
-        in => $time_in,
-        out=> $time_out,
+        in  => $time_in->strftime('%H:%M'),
+        out => $time_out ? $time_out->strftime('%H:%M') : undef,
+        used_today => $used_today ? sprintf('%dh %dm', $used_today->in_units('hours', 'minutes')) : undef,
         flagged_hours => $self->flagged_hours,
         days_used => $self->days_used,
         total_used => $used,
