@@ -33,7 +33,8 @@ table#visits {
     height: 48px; }
   table#visits th {
     background: #2ca25f;
-    padding: 0.25em; }
+    padding: 0.25em;
+    text-align: center; }
   table#visits td {
     border: solid 1px #99d869; }
   table#visits tr.inactive td {
@@ -93,4 +94,9 @@ div.member_widget {
   height: 3rem;
   font-size: 2rem; }
   div.member_widget input, div.member_widget button {
+    display: inline-block;
     height: 100%; }
+  div.member_widget input {
+    width: 30em; }
+  div.member_widget button {
+    width: 4em; }

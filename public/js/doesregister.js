@@ -1,10 +1,11 @@
 <!-- Angular controllers -->
 
-var app = angular.module('DoES-Register', []);
+var app = angular.module('DoES-Register', ['ui.bootstrap']);
 
 app.factory('socket', function ($rootScope) {
 
     var socket = io.connect( );
+    // wrap on/emit so that the supplied callbacks are run in the correct scope
     return {
         on: function(eventName, callback) {
             socket.on(eventName, function() {
@@ -17,9 +18,8 @@ app.factory('socket', function ($rootScope) {
         emit: function() {
             var args = Array.prototype.slice.call(arguments);
             var numArgs = args.length;
+
             var callback;
-            console.log(args);
-            console.log(args[numArgs-1]);
             if (typeof(args[numArgs-1]) === 'function') {
                 callback = args.pop();
             }
@@ -43,9 +43,20 @@ app.factory('socket', function ($rootScope) {
 app.controller('VisitCtrl', function ($scope, socket) {
     $scope.visits = [];
 
+    // functionality for the + button
+    $scope.selectedMember = '';
     $scope.showAddMember = false;
     $scope.toggleAddMember = function () {
         $scope.showAddMember = ! $scope.showAddMember;
+    }
+    $scope.showName = function ($model) {
+        if (!$model) return;
+        return $model.name;
+    }
+    $scope.selectMember = function ($model) {
+        console.log($model);
+        console.log(socket);
+        socket.emit('member_visit', $model.id);
     }
 
     $scope.end_visit = function (visit) {
@@ -59,22 +70,23 @@ app.controller('VisitCtrl', function ($scope, socket) {
  
     socket.on('visits', function (visits) {
         $scope.visits = visits;
+        $scope.showAddMember = false;
     });
 
     socket.emit('hello'); // Tell server we are ready for first visits list
 }); 
 
-// from http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
-app.directive('focusMe', function($timeout, socket) {
+// expanded from http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
+// ideally, this should also init the typeahead stuffs
+app.directive('initMembers', function($timeout, socket) {
     return {
         scope: true,
         link: function(scope, element, attrs) {
-            scope.$watch(attrs.focusMe, function(value) {
+            scope.$watch(attrs.initMembers, function(value) {
                 if(value) { 
                     $timeout(function() {
                         element.val('');
                         element.focus();
-                        console.log(socket);
                         socket.emit('get_members', function (members) {
                             $.each(members, function (i,m) {
                                 m.label = m.name;
@@ -88,12 +100,3 @@ app.directive('focusMe', function($timeout, socket) {
         }
     };
 });
-
-    /*
-
-    function member_search_create (socket, position, callback) {
-    };
-
-    socket.emit('member_visit', item.id);
-
-    */

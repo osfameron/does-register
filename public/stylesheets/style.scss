@@ -34,6 +34,7 @@ table#visits {
     th {
         background: $dark;
         padding: 0.25em;
+        text-align: center;
     }
     td {
         border: solid 1px $mid;
@@ -114,6 +115,13 @@ div.member_widget {
     height: 3rem;
     font-size: 2rem;
     input, button {
+        display: inline-block;
         height: 100%;
+    }
+    input {
+        width: 30em;
+    }
+    button {
+        width: 4em;
     }
 }
