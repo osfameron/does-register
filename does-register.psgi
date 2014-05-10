@@ -35,7 +35,7 @@ builder {
 
     mount '/' => builder {
         enable "Static",
-            path => qr/\.(?:js|css|jpe?g|gif|png|html?|swf|ico)$/,
+            path => qr/\.(?:js|css|jpe?g|gif|png|html?|swf|ico|txt)$/,
                 root => $root->child('/public/');
 
         enable "SimpleLogger", level => 'debug';
