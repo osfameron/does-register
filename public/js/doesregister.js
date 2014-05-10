@@ -14,15 +14,28 @@ app.factory('socket', function ($rootScope) {
                 });
             });
         },
-        emit: function(eventName, data, callback) {
-            socket.emit(eventName, data, function() {
+        emit: function() {
+            var args = Array.prototype.slice.call(arguments);
+            var numArgs = args.length;
+            var callback;
+            console.log(args);
+            console.log(args[numArgs-1]);
+            if (typeof(args[numArgs-1]) === 'function') {
+                callback = args.pop();
+            }
+
+            callback_wrapper = function () {
                 var args = arguments;
                 $rootScope.$apply(function() {
                     if(callback) {
                         callback.apply(socket, args);
                     }
                 });
-            });
+            };
+
+            args.push(callback_wrapper);
+
+            socket.emit.apply(socket, args);
         }
     };
 });
@@ -52,14 +65,23 @@ app.controller('VisitCtrl', function ($scope, socket) {
 }); 
 
 // from http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
-app.directive('focusMe', function($timeout) {
+app.directive('focusMe', function($timeout, socket) {
     return {
+        scope: true,
         link: function(scope, element, attrs) {
             scope.$watch(attrs.focusMe, function(value) {
                 if(value) { 
                     $timeout(function() {
                         element.val('');
                         element.focus();
+                        console.log(socket);
+                        socket.emit('get_members', function (members) {
+                            $.each(members, function (i,m) {
+                                m.label = m.name;
+                            });
+                            console.log(members);
+                            scope.members = members;
+                       });
                     });
                 }
             });
@@ -70,36 +92,8 @@ app.directive('focusMe', function($timeout) {
     /*
 
     function member_search_create (socket, position, callback) {
-        socket.emit('get_members', function (members) {
-            $.each(members, function (i,m) {
-                m.label = m.name;
-            });
-            div = $('<div class="member_widget">');
-            input = $('<input type="text" name="member_name">');
-            create = $('<button name="create_new"> Create </button>')
-                .click(function () { alert("TODO") });
-            cancel = $('<button name="create_new"> Cancel </button>')
-                .click(function () { div.remove() });
-            div.append(input, create, cancel);
-            input.autocomplete({ 
-                source: members,
-                select: function (event, ui) {
-                    callback(socket, ui.item);
-                    div.remove();
-                }
-            });
-            div.insertAfter(position);
-            input.focus();
-        });
     };
 
-    $('#add_member .plus').unbind('click').click( function () {
-        if ( $('#add_member input').length ) {
-            $('#add_member input').focus();
-            return;
-        }
-        member_search_create(socket, $(this), function (socket, item) {
-            socket.emit('member_visit', item.id);
-        });
-    });
+    socket.emit('member_visit', item.id);
+
     */
