@@ -1,32 +1,55 @@
 <!-- Angular controllers -->
 
-function VisitCtrl($scope) {
+var app = angular.module('DoES-Register', []);
+
+app.factory('socket', function ($rootScope) {
+
+    console.log("FACTORY");
+    var socket = io.connect( );
+    return {
+        on: function(eventName, callback) {
+            socket.on(eventName, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function(eventName, data, callback) {
+            socket.emit(eventName, data, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    if(callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
+        }
+    };
+});
+
+app.controller('VisitCtrl', function ($scope, socket) {
     $scope.visits = [];
 
     $scope.end_visit = function (visit) {
         console.log(visit, visit.visit_id);
-        $scope.socket.emit('end_visit', visit.visit_id);
+        socket.emit('end_visit', visit.visit_id);
     }
-}
-
-$(function () {
-
-    <!-- PocketIO -->
-    var socket = io.connect( );
-    var $visit = $('table#visits').scope();
-    $visit.$apply( function () { $visit.socket = socket });
 
     socket.on('connect', function () {
         console.log('CONNECTED');
     });
  
     socket.on('visits', function (visits) {
-        $visit.$apply( function () { $visit.visits = visits });
+        $scope.visits = visits;
     });
 
     socket.emit('hello'); // Tell server we are ready for first visits list
+});
 
-    <!-- JQuery -->
+
+
+    /*
 
     function member_search_create (socket, position, callback) {
         socket.emit('get_members', function (members) {
@@ -61,5 +84,4 @@ $(function () {
             socket.emit('member_visit', item.id);
         });
     });
-
-});
+    */
