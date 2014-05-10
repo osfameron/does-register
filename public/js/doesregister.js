@@ -4,7 +4,6 @@ var app = angular.module('DoES-Register', []);
 
 app.factory('socket', function ($rootScope) {
 
-    console.log("FACTORY");
     var socket = io.connect( );
     return {
         on: function(eventName, callback) {
@@ -31,6 +30,11 @@ app.factory('socket', function ($rootScope) {
 app.controller('VisitCtrl', function ($scope, socket) {
     $scope.visits = [];
 
+    $scope.showAddMember = false;
+    $scope.toggleAddMember = function () {
+        $scope.showAddMember = ! $scope.showAddMember;
+    }
+
     $scope.end_visit = function (visit) {
         console.log(visit, visit.visit_id);
         socket.emit('end_visit', visit.visit_id);
@@ -45,9 +49,23 @@ app.controller('VisitCtrl', function ($scope, socket) {
     });
 
     socket.emit('hello'); // Tell server we are ready for first visits list
+}); 
+
+// from http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
+app.directive('focusMe', function($timeout) {
+    return {
+        link: function(scope, element, attrs) {
+            scope.$watch(attrs.focusMe, function(value) {
+                if(value) { 
+                    $timeout(function() {
+                        element.val('');
+                        element.focus();
+                    });
+                }
+            });
+        }
+    };
 });
-
-
 
     /*
 
